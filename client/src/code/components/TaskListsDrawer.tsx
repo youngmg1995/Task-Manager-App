@@ -4,27 +4,68 @@
 
 // node modules
 import React from "react";
-
-// local imports
+import {
+  Chip, 
+  Divider,
+  List,
+  ListItem,
+  Typography,
+} from "@material-ui/core";
+import { makeStyles } from '@material-ui/core/styles';
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
-// ---------------------------------------------------------------- ToDoApp Component ------------------------------------------------------------------
+// ------------------------------------------------------------------------ Styles ------------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-class ToDoApp extends React.Component {
-  constructor(props: any) {
-    super(props);
+const useStyles: any = makeStyles(() => ({
+  root: {
+    width: 160,
+  },
+}));
 
-    this.state = {
-    };
-  }
 
-  render() {
-    return (
-      <div>Hello World!</div>
-    );
-  }
+// --------------------------------------------------------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------- Component Definition ------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// props and state types
+type Props = {
+};
+
+// actual component
+const TaskListsDrawer: React.FC<Props> = (props) => {
+  
+  const {  } = props;
+
+  const classes = useStyles();
+
+  return (
+    <div className={classes.root}>
+      <Typography variant="h6">Task Lists</Typography>
+
+      <Divider/>
+
+      <List>
+        <ListItem>
+          <Chip label="Task List 1" onClick={() => {}} />
+        </ListItem>
+        <ListItem>
+          <Chip label="Task List 2" onClick={() => {}} />
+        </ListItem>
+        <ListItem>
+          <Chip label="Task List 3" onClick={() => {}} />
+        </ListItem>
+        <ListItem>
+          <Chip label="Task List 4" onClick={() => {}} />
+        </ListItem>
+        <ListItem>
+          <Chip label="Task List 5" onClick={() => {}} />
+        </ListItem>
+      </List>
+
+    </div>
+  );
 };
 
 
@@ -32,8 +73,7 @@ class ToDoApp extends React.Component {
 // ----------------------------------------------------------------------- Exports ------------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// default export
-export default ToDoApp;
+export default TaskListsDrawer;
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------

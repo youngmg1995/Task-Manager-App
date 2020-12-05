@@ -11,7 +11,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 // local imports
-import BaseLayout from "./components/ToDoApp";
+import ToDoApp from "./ToDoApp";
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -19,7 +19,7 @@ import BaseLayout from "./components/ToDoApp";
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ReactDOM.render(
-  <BaseLayout />,
+  <ToDoApp />,
   document.body
 );
 

@@ -3,19 +3,13 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // node modules
-import { 
-  SwipeableDrawer,
-} from "@material-ui/core";
 import React from "react";
-
-//local imports
-import TaskListsDrawer from "./TaskListsDrawer";
-import ToDoAppBar from "./ToDoAppBar";
-
-
-// --------------------------------------------------------------------------------------------------------------------------------------------------------
-// ------------------------------------------------------------------------ Styles ------------------------------------------------------------------------
-// --------------------------------------------------------------------------------------------------------------------------------------------------------
+import {
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@material-ui/core";
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -24,35 +18,20 @@ import ToDoAppBar from "./ToDoAppBar";
 
 // props and state types
 type Props = {
-  showTaskLists: boolean,
-  setShowTaskLists: (inVisible: boolean) => void;
+  showLoadingScreen: boolean,
 };
 
 // actual component
-const BaseLayout: React.FC<Props> = (props) => {
+const LoadingScreen: React.FC<Props> = (props) => {
   
-  const { children, showTaskLists, setShowTaskLists } = props;
+  const { showLoadingScreen } = props;
 
   return (
-    <React.Fragment>
-
-      <ToDoAppBar
-        showTaskLists={showTaskLists}
-        setShowTaskLists={setShowTaskLists}
-      />
-
-      <SwipeableDrawer 
-        anchor="left" 
-        open={showTaskLists} onClose={() => setShowTaskLists(false)} 
-        onOpen={() => setShowTaskLists(true)} 
-      >
-        <TaskListsDrawer />
-      </SwipeableDrawer>
-
-      <div>
-        {children}
-      </div>
-    </React.Fragment>
+    <Dialog open={ showLoadingScreen } disableBackdropClick={ true } disableEscapeKeyDown={ true }
+      transitionDuration={ 0 }>
+      <DialogTitle style={{ textAlign:"center" }}>Please Wait</DialogTitle>
+      <DialogContent><DialogContentText>...Contacting server...</DialogContentText></DialogContent>
+    </Dialog>
   );
 };
 
@@ -61,7 +40,7 @@ const BaseLayout: React.FC<Props> = (props) => {
 // ----------------------------------------------------------------------- Exports ------------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-export default BaseLayout;
+export default LoadingScreen;
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
