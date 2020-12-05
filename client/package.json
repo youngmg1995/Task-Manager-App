@@ -4,7 +4,7 @@
   "description": "Client-Side React App for ToDo App",
   "main": "src/code/main.tsx",
   "scripts": {
-    "build": "webpack --mode procuction",
+    "build": "webpack --mode production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
