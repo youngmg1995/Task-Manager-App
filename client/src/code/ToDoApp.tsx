@@ -11,7 +11,7 @@ import {
   BaseLayout,
 } from "./components";
 import * as Tasks from "./Tasks";
-import { ITask } from "./Tasks"
+import { ITask } from "./Tasks";
 
 
 

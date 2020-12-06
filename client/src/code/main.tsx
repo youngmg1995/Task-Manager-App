@@ -3,8 +3,8 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // css styles
-import "normalize.css";
 import "../css/main.css";
+import "normalize.css";
 
 // node modules
 import React from "react";

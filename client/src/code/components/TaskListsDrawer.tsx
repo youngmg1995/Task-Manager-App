@@ -5,11 +5,11 @@
 // node modules
 import React from "react";
 import {
-  Chip, 
   Divider,
   List,
   ListItem,
-  Typography,
+  ListItemText,
+  ListSubheader,
 } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -42,25 +42,31 @@ const TaskListsDrawer: React.FC<Props> = (props) => {
 
   return (
     <div className={classes.root}>
-      <Typography variant="h6">Task Lists</Typography>
 
-      <Divider/>
-
-      <List>
-        <ListItem>
-          <Chip label="Task List 1" onClick={() => {}} />
+      <List
+        component="nav"
+        aria-labelledby="list-subheader"
+        subheader={
+          <ListSubheader component="div" id="list-subheader">
+            Task Lists
+          </ListSubheader>
+        }
+      >
+        <Divider/>
+        <ListItem button>
+          <ListItemText primary="Task List 1"/>
         </ListItem>
-        <ListItem>
-          <Chip label="Task List 2" onClick={() => {}} />
+        <ListItem button>
+          <ListItemText primary="Task List 2"/>
         </ListItem>
-        <ListItem>
-          <Chip label="Task List 3" onClick={() => {}} />
+        <ListItem button>
+          <ListItemText primary="Task List 3"/>
         </ListItem>
-        <ListItem>
-          <Chip label="Task List 4" onClick={() => {}} />
+        <ListItem button>
+          <ListItemText primary="Task List 4"/>
         </ListItem>
-        <ListItem>
-          <Chip label="Task List 5" onClick={() => {}} />
+        <ListItem button>
+          <ListItemText primary="Task List 5"/>
         </ListItem>
       </List>
 
