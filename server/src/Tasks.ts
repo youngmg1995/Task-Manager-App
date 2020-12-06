@@ -14,9 +14,7 @@ import Datastore from "nedb";
 export interface ITask {
   _id?: number,
   title: string,
-  category?: string,
-  dueDate?: string,
-  dueTime?: string,
+  taskList: number,
   description: string,
 }
 
@@ -34,38 +32,44 @@ export class Worker {
       filename: path.join(__dirname, "tasks.db"),
       autoload: true
     });
+    this.db.ensureIndex({ fieldName: "taskList" });
   }
 
   // list tasks
   public listTasks(): Promise<ITask[]> {
     return new Promise((inResolve, inReject) => {
-      this.db.find({}, (inError: Error, inDocs: ITask[]) => {
-        if (inError) {
-          console.log("Tasks.Worker.listTasks(): Error", inError);
-          inReject({ status: 500, message: "Internal Server Error"});
-        } else {
-          console.log("Tasks.Worker.listTasks(): OK", inDocs);
-          inResolve(inDocs);
+      this.db.find(
+        {},
+        {},
+        (inError: Error | null, inDocs: ITask[]) => {
+          if (inError) {
+            console.log("Tasks.Worker.listTasks(): Error", inError);
+            inReject({ status: 500, message: "Internal Server Error"});
+          } else {
+            console.log("Tasks.Worker.listTasks(): OK", inDocs);
+            inResolve(inDocs);
+          }
         }
-      });
+      );
     });
   };
 
   // get specific task
   public getTask(inID: string): Promise<ITask> {
     return new Promise((inResolve, inReject) => {
-      this.db.find(
-        { _id: inID }, 
-        (inError: Error, inDocs: ITask[]) => {
+      this.db.findOne(
+        { _id: inID },
+        {},
+        (inError: Error | null, inDoc: ITask) => {
           if (inError) {
             console.log("Tasks.Worker.getTask(): Error", inError);
             inReject({ status: 500, message: "Internal Server Error"});
-          } else if (inDocs.length === 0) {
+          } else if (inDoc === null) {
             console.log("Tasks.Worker.getTask(): Error", "Task Not Found");
             inReject({ status: 404, message: "Task Not Found"});
           } else {
-            console.log("Tasks.Worker.getTask(): OK", inDocs);
-            inResolve(inDocs[0]);
+            console.log("Tasks.Worker.getTask(): OK", inDoc);
+            inResolve(inDoc);
           }
         }
       );
@@ -96,7 +100,7 @@ export class Worker {
       this.db.update(
         { _id: inID },
         inTask,
-        {upsert: true},
+        {returnUpdatedDocs : true},
         (inError: Error | null, inNumEdited: number, inNewDoc: ITask) => {
           if (inError) {
             console.log("Tasks.Worker.editTack(): Error", inError);
@@ -132,14 +136,45 @@ export class Worker {
     });
   };
 
-}
+  // list tasks for specific TaskList
+  public getTaskList(inTaskListID: string): Promise<ITask[]> {
+    return new Promise((inResolve, inReject) => {
+      this.db.find(
+        { taskList: inTaskListID },
+        {},
+        (inError: Error | null, inDocs: ITask[]) => {
+          if (inError) {
+            console.log("Tasks.Worker.getTaskList(): Error", inError);
+            inReject({ status: 500, message: "Internal Server Error" });
+          } else {
+            console.log("Tasks.Worker.getTaskList(): OK", inDocs);
+            inResolve(inDocs);
+          }
+        }
+      );
+    });
+  }
 
+  // delete all taks for a specific TaskList
+  public deleteTaskList(inTaskListID: string): Promise<void> {
+    return new Promise((inResolve, inReject) => {
+      this.db.remove(
+        { taskList: inTaskListID },
+        {},
+        (inError: Error | null, inNumRemoved: number) => {
+          if (inError) {
+            console.log("Tasks.Worker.deleteTaskList(): Error", inError);
+            inReject({ status: 500, message: "Internal Server Error" });
+          } else {
+            console.log("Tasks.Worker.deleteTaskList(): OK", inNumRemoved);
+            inResolve();
+          }
+        }
+      );
+    });
+  }
 
-
-// --------------------------------------------------------------------------------------------------------------------------------------------------------
-// --------------------------------------------------------------------- Start App ------------------------------------------------------------------------
-// --------------------------------------------------------------------------------------------------------------------------------------------------------
-
+};
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
