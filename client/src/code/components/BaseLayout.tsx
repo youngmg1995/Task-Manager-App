@@ -6,7 +6,7 @@
 import { 
   // Container,
   // Divider,
-  Grid,
+  // Grid,
   Hidden,
   SwipeableDrawer,
 } from "@material-ui/core";
@@ -33,8 +33,18 @@ const useStyles: any = makeStyles(() => ({
     width: "100vw",
     height: "100vh",
   },
-  drawer: {
-    overflow: "auto",
+  appBody: {
+    display: "grid",
+    gridTemplateColumns: "auto 1fr",
+    gridTemplateRows: "1fr",
+  },
+  drawerContainer: {
+    gridColumn: "1/1",
+    gridRow: "1/1"
+  },
+  tasksContainer: {
+    gridColumn: "2/2",
+    gridRow: "1/1"
   },
 }));
 
@@ -96,22 +106,18 @@ const BaseLayout: React.FC<Props> = (props) => {
           {drawer}
         </SwipeableDrawer>
       </Hidden>
-      
-      <Grid container alignItems="stretch" justify="center">
+
+      <div className={classes.appBody}>
         <Hidden smDown>
+          <div className={classes.drawerContainer}>
             {drawer}
+          </div>
         </Hidden>
-        <Grid item container xs alignItems="stretch" justify="center">
-          {/* <div className={classes.appBody}>
-            <TasksToolBar />
-            <Divider />
-            <div>
-              Tasks
-            </div>
-          </div> */}
+
+        <div className={classes.tasksContainer}>
           <TaskListUI tasks={tasks}/>
-        </Grid>
-      </Grid>
+        </div>
+      </div>
 
     </div>
   );
