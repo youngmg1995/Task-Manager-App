@@ -7,7 +7,6 @@ import axios, { AxiosResponse } from "axios";
 
 // local imports
 import { config } from "./config";
-import { ITask } from "./Tasks";
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
 // ------------------------------------------------------------------- Task Interface ---------------------------------------------------------------------
@@ -32,7 +31,7 @@ export class Worker {
     const response: AxiosResponse = await axios.get(
       `${this.serverAddress}/tasklists`
     );
-    console.log("Client - GET /task: response = ", response);
+    console.log("Client - GET /tasklists: response = ", response);
     return response.data;
   }
 
@@ -68,7 +67,7 @@ export class Worker {
   }
 
   // get tasks for specific task list
-  public async getTaskListTasks(inID: string): Promise<ITask> {
+  public async getTaskListTasks(inID: string): Promise<any[]> {
     console.log("Client - GET /tasklists/:id", inID);
     const response: AxiosResponse = await axios.get(
       `${this.serverAddress}/tasklists/${inID}`

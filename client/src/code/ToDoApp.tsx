@@ -50,6 +50,7 @@ export default class ToDoApp extends React.Component<Props, State> {
     this.setShowLoadingScreen = this.setShowLoadingScreen.bind(this);
     this.setShowTaskLists = this.setShowTaskLists.bind(this);
     this.addTaskList = this.addTaskList.bind(this);
+    this.setSelectedTaskList = this.setSelectedTaskList.bind(this);
   }
 
   setShowLoadingScreen(inVisible: boolean): void {
@@ -78,6 +79,32 @@ export default class ToDoApp extends React.Component<Props, State> {
     })
   }
 
+  async setSelectedTaskList(inTaskList: ITaskList | null, isInit: boolean = false): Promise<void> {
+    if (inTaskList === null) {
+      if (this.state.selectedTaskList !== null || isInit) {
+        console.log("Setting new task list to null")
+        const worker: Tasks.Worker = new Tasks.Worker();
+        const tasks: any[] = await worker.listTasks();
+        this.setState({
+          selectedTaskList: inTaskList,
+          tasks: tasks,
+        });
+      } 
+    } else {
+      if (this.state.selectedTaskList === null 
+        || (this.state.selectedTaskList !== null && this.state.selectedTaskList._id !== inTaskList._id)
+      ) {
+        console.log("Setting new task list")
+        const worker: TaskLists.Worker = new TaskLists.Worker();
+        const tasks: any[] = await worker.getTaskListTasks(String(inTaskList._id));
+        this.setState({
+          selectedTaskList: inTaskList,
+          tasks: tasks,
+        });
+      }
+    }
+  }
+
   // This might not be working properly
   componentDidMount() {
     async function getTaskLists(): Promise<ITaskList[]> {
@@ -89,19 +116,9 @@ export default class ToDoApp extends React.Component<Props, State> {
       inTaskLists.forEach((inTaskList) => {
         this.addTaskList(inTaskList);
       });
-    }).then(() => {
-      async function getTasks(): Promise<any[]> {
-        const worker: Tasks.Worker = new Tasks.Worker();
-        const tasks: any[] = await worker.listTasks();
-        return tasks
-      }
-      getTasks().then((inTasks: any[]) => {
-        inTasks.forEach((inTask) => {
-          this.addTask(inTask);
-        });
-      }).then(() => {
+      this.setSelectedTaskList(null, true).then(() => {
         this.setShowLoadingScreen(false);
-      });
+      })
     });
   }
 
@@ -119,6 +136,7 @@ export default class ToDoApp extends React.Component<Props, State> {
             setShowTaskLists = {this.setShowTaskLists}
             taskLists = {this.state.taskLists}
             selectedTaskList={this.state.selectedTaskList}
+            setSelectedTaskList={this.setSelectedTaskList}
             tasks={this.state.tasks}
             selectedTask={this.state.selectedTask}
           />

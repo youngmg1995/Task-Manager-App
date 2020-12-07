@@ -50,7 +50,7 @@ const TaskListUI: React.FC<Props> = (props) => {
   return (
     <List className={classes.root}
       subheader={
-        <ListItem>
+        <ListItem divider>
           <ListItemIcon>
             <Checkbox/>
           </ListItemIcon>
@@ -59,7 +59,7 @@ const TaskListUI: React.FC<Props> = (props) => {
       }
     >
       {tasks.map((inTask) => (
-        <ListItem key={inTask._id}>
+        <ListItem key={inTask._id} divider>
           <ListItemIcon>
             <Checkbox/>
           </ListItemIcon>

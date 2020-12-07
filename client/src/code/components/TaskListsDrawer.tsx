@@ -23,7 +23,7 @@ import { ITaskList } from "../TaskLists";
 
 const useStyles: any = makeStyles(() => ({
   root: {
-    width: 160,
+    width: 250,
   },
 }));
 
@@ -35,12 +35,18 @@ const useStyles: any = makeStyles(() => ({
 // props and state types
 type Props = {
   taskLists: ITaskList[],
+  selectedTaskList: ITaskList | null,
+  setSelectedTaskList: (inTaskList: ITaskList | null) => Promise<void>;
 };
 
 // actual component
 const TaskListsDrawer: React.FC<Props> = (props) => {
   
-  const { taskLists } = props;
+  const { 
+    taskLists,
+    selectedTaskList,
+    setSelectedTaskList,
+  } = props;
 
   const classes = useStyles();
 
@@ -55,12 +61,28 @@ const TaskListsDrawer: React.FC<Props> = (props) => {
           </ListSubheader>
         }
       >
+
         <Divider/>
+
+        <ListItem 
+          button
+          selected={selectedTaskList === null}
+          onClick={() => setSelectedTaskList(null)}
+        >
+          <ListItemText primary="All Tasks" />
+        </ListItem>
+
         {taskLists.map((inTaskList) => (
-          <ListItem button key={inTaskList._id}>
+          <ListItem
+            key={inTaskList._id} 
+            button
+            selected={selectedTaskList?._id === inTaskList._id}
+            onClick={() => setSelectedTaskList(inTaskList)}
+          >
             <ListItemText primary={inTaskList.title} />
           </ListItem>
         ))}
+
       </List>
 
     </div>

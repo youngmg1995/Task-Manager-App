@@ -49,6 +49,7 @@ type Props = {
   setShowTaskLists: (inVisible: boolean) => void;
   taskLists: ITaskList[],
   selectedTaskList: ITaskList | null,
+  setSelectedTaskList: (inTaskList: ITaskList | null) => Promise<void>;
   tasks: any[],
   selectedTask: ITask | null,
 };
@@ -60,7 +61,8 @@ const BaseLayout: React.FC<Props> = (props) => {
     showTaskLists, 
     setShowTaskLists, 
     taskLists, 
-    // selectedTaskList,
+    selectedTaskList,
+    setSelectedTaskList,
     tasks,  
     // selectedTask,
   } = props;
@@ -68,7 +70,11 @@ const BaseLayout: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const drawer = (
-    <TaskListsDrawer taskLists={taskLists} />
+    <TaskListsDrawer 
+      taskLists={taskLists}
+      selectedTaskList={selectedTaskList}
+      setSelectedTaskList={setSelectedTaskList}
+    />
   );
 
   return (

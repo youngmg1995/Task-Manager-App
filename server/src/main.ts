@@ -101,8 +101,8 @@ app.delete("/tasklists/:id",
   }
 );
 
-// list tasks for specific task list (does not include description)
-app.get("/tasklist/:id",
+// list tasks for specific task list (setup to return type any[] in case certain task fields excluded in the future)
+app.get("/tasklists/:id",
   async (inRequest: Request, inResponse: Response) => {
     console.log("GET /tasklist/:id", inRequest.params.id);
     try {
@@ -111,6 +111,7 @@ app.get("/tasklist/:id",
       const finalTasks = tasks.map((task) => ({
         _id: task._id,
         title: task.title,
+        description: task.description,
       }));
       console.log("GET /tasklist/:id: OK", finalTasks);
       inResponse.json(finalTasks);
@@ -121,15 +122,20 @@ app.get("/tasklist/:id",
   }
 );
 
-// list tasks
+// list all tasks (setup to return type any[] in case certain task fields excluded in the future)
 app.get("/tasks",
   async (inRequest: Request, inResponse: Response) => {
     console.log("GET /tasks ");
     try {
       const Worker: Tasks.Worker = new Tasks.Worker();
       const tasks: ITask[] = await Worker.listTasks();
-      console.log("GET /tasks : OK", tasks);
-      inResponse.json(tasks);
+      const finalTasks = tasks.map((task) => ({
+        _id: task._id,
+        title: task.title,
+        description: task.description,
+      }));
+      console.log("GET /tasks : OK", finalTasks);
+      inResponse.json(finalTasks);
     } catch (inError) {
       console.log("GET /tasks : Error", inError);
       inResponse.status(inError.status).send(inError.message);
