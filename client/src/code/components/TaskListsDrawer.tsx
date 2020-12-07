@@ -41,7 +41,6 @@ type Props = {
 const TaskListsDrawer: React.FC<Props> = (props) => {
   
   const { taskLists } = props;
-  console.log(taskLists);
 
   const classes = useStyles();
 
@@ -50,10 +49,9 @@ const TaskListsDrawer: React.FC<Props> = (props) => {
 
       <List
         component="nav"
-        aria-labelledby="list-subheader"
         subheader={
-          <ListSubheader component="div" id="list-subheader">
-            Task Lists
+          <ListSubheader>
+            <ListItemText primary="Task Lists"/>
           </ListSubheader>
         }
       >

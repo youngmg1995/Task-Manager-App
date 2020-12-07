@@ -121,21 +121,21 @@ app.get("/tasklist/:id",
   }
 );
 
-// // list tasks
-// app.get("/tasks",
-//   async (inRequest: Request, inResponse: Response) => {
-//     console.log("GET /tasks ");
-//     try {
-//       const Worker: Tasks.Worker = new Tasks.Worker();
-//       const tasks: ITask[] = await Worker.listTasks();
-//       console.log("GET /tasks : OK", tasks);
-//       inResponse.json(tasks);
-//     } catch (inError) {
-//       console.log("GET /tasks : Error", inError);
-//       inResponse.status(inError.status).send(inError.message);
-//     }
-//   }
-// );
+// list tasks
+app.get("/tasks",
+  async (inRequest: Request, inResponse: Response) => {
+    console.log("GET /tasks ");
+    try {
+      const Worker: Tasks.Worker = new Tasks.Worker();
+      const tasks: ITask[] = await Worker.listTasks();
+      console.log("GET /tasks : OK", tasks);
+      inResponse.json(tasks);
+    } catch (inError) {
+      console.log("GET /tasks : Error", inError);
+      inResponse.status(inError.status).send(inError.message);
+    }
+  }
+);
 
 // get specific task
 app.get("/tasks/:id",

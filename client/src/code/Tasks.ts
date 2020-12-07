@@ -29,15 +29,15 @@ export interface ITask {
 export class Worker {
   private serverAddress: string = config.serverAddress;
 
-  // // list tasks
-  // public async listTasks(): Promise<ITask[]> {
-  //   console.log("Client - GET /tasks");
-  //   const response: AxiosResponse = await axios.get(
-  //     `${this.serverAddress}/tasks`
-  //   );
-  //   console.log("Client - GET /task: response = ", response);
-  //   return response.data;
-  // }
+  // list tasks
+  public async listTasks(): Promise<ITask[]> {
+    console.log("Client - GET /tasks");
+    const response: AxiosResponse = await axios.get(
+      `${this.serverAddress}/tasks`
+    );
+    console.log("Client - GET /task: response = ", response);
+    return response.data;
+  }
 
   // get specific tasks
   public async getTask(inID: string): Promise<ITask> {

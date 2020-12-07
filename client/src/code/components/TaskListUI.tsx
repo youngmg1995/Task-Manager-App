@@ -3,22 +3,20 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // node modules
-import { 
-  // Container,
-  // Divider,
-  Grid,
-  Hidden,
-  SwipeableDrawer,
+import React from "react";
+import {
+  Checkbox,
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemSecondaryAction,
+  ListItemText,
 } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
-import React from "react";
+import WhatshotIcon from '@material-ui/icons/Whatshot';
 
-//local imports
-import { ITask } from "../Tasks";
-import { ITaskList } from "../TaskLists";
-import TaskListsDrawer from "./TaskListsDrawer";
-import TaskListUI from "./TaskListUI";
-import ToDoAppBar from "./ToDoAppBar";
+// local imports
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -27,13 +25,7 @@ import ToDoAppBar from "./ToDoAppBar";
 
 const useStyles: any = makeStyles(() => ({
   root: {
-    display: "grid",
-    gridTemplateColumns: "1fr",
-    gridTemplateRows: "auto 1fr",
-    width: "100vw",
-    height: "100vh",
-  },
-  drawer: {
+    flexGrow: 1,
     overflow: "auto",
   },
 }));
@@ -45,69 +37,41 @@ const useStyles: any = makeStyles(() => ({
 
 // props and state types
 type Props = {
-  showTaskLists: boolean,
-  setShowTaskLists: (inVisible: boolean) => void;
-  taskLists: ITaskList[],
-  selectedTaskList: ITaskList | null,
   tasks: any[],
-  selectedTask: ITask | null,
 };
 
 // actual component
-const BaseLayout: React.FC<Props> = (props) => {
+const TaskListUI: React.FC<Props> = (props) => {
   
-  const { 
-    showTaskLists, 
-    setShowTaskLists, 
-    taskLists, 
-    // selectedTaskList,
-    tasks,  
-    // selectedTask,
-  } = props;
+  const { tasks } = props;
 
   const classes = useStyles();
 
-  const drawer = (
-    <TaskListsDrawer taskLists={taskLists} />
-  );
-
   return (
-    <div className={classes.root}>
-      
-      <div>
-        <ToDoAppBar
-          showTaskLists={showTaskLists}
-          setShowTaskLists={setShowTaskLists}
-        />
-      </div>
-
-      <Hidden mdUp>
-        <SwipeableDrawer 
-          anchor="left" 
-          open={showTaskLists} onClose={() => setShowTaskLists(false)} 
-          onOpen={() => setShowTaskLists(true)} 
-        >
-          {drawer}
-        </SwipeableDrawer>
-      </Hidden>
-      
-      <Grid container alignItems="stretch" justify="center">
-        <Hidden smDown>
-            {drawer}
-        </Hidden>
-        <Grid item container xs alignItems="stretch" justify="center">
-          {/* <div className={classes.appBody}>
-            <TasksToolBar />
-            <Divider />
-            <div>
-              Tasks
-            </div>
-          </div> */}
-          <TaskListUI tasks={tasks}/>
-        </Grid>
-      </Grid>
-
-    </div>
+    <List className={classes.root}
+      subheader={
+        <ListItem>
+          <ListItemIcon>
+            <Checkbox/>
+          </ListItemIcon>
+          <ListItemText primary={"Tasks Toolbar"} />
+        </ListItem>
+      }
+    >
+      {tasks.map((inTask) => (
+        <ListItem key={inTask._id}>
+          <ListItemIcon>
+            <Checkbox/>
+          </ListItemIcon>
+          <ListItemText primary={inTask.title} />
+          <ListItemSecondaryAction>
+            <IconButton>
+              <WhatshotIcon />
+            </IconButton>
+          </ListItemSecondaryAction>
+        </ListItem>
+      ))}
+    </List>
   );
 };
 
@@ -116,7 +80,7 @@ const BaseLayout: React.FC<Props> = (props) => {
 // ----------------------------------------------------------------------- Exports ------------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-export default BaseLayout;
+export default TaskListUI;
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
