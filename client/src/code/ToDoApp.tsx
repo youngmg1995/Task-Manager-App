@@ -10,8 +10,10 @@ import {
   // LoadingScreen,
   BaseLayout,
 } from "./components";
-import * as Tasks from "./Tasks";
-import { ITask } from "./Tasks";
+// import * as Tasks from "./Tasks";
+// import { ITask } from "./Tasks";
+import * as TaskLists from "./TaskLists";
+import { ITaskList } from "./TaskLists";
 
 
 
@@ -25,7 +27,7 @@ type Props = {
 type State = {
   showLoadingScreen: boolean,
   showTaskLists: boolean,
-  taskList: ITask[],
+  taskLists: ITaskList[],
 };
 
 // actual component
@@ -36,12 +38,12 @@ export default class ToDoApp extends React.Component<Props, State> {
     this.state = {
       showLoadingScreen: true,
       showTaskLists: false,
-      taskList: [],
+      taskLists: [],
     };
 
     this.setShowLoadingScreen = this.setShowLoadingScreen.bind(this);
     this.setShowTaskLists = this.setShowTaskLists.bind(this);
-    this.addTaskToList = this.addTaskToList.bind(this);
+    this.addTaskList = this.addTaskList.bind(this);
   }
 
   setShowLoadingScreen(inVisible: boolean): void {
@@ -56,24 +58,24 @@ export default class ToDoApp extends React.Component<Props, State> {
     });
   };
 
-  addTaskToList(inTask: ITask) {
-    const newTaskList: ITask[] = this.state.taskList.slice(0);
-    newTaskList.push(inTask);
+  addTaskList(inTaskList: ITaskList) {
+    const newTaskLists: ITaskList[] = this.state.taskLists.slice(0);
+    newTaskLists.push(inTaskList);
     this.setState({
-      taskList: newTaskList,
+      taskLists: newTaskLists,
     })
   }
 
   componentDidMount() {
-    async function getTasks(): Promise<ITask[]> {
-      const tasksWorker: Tasks.Worker = new Tasks.Worker();
-      const tasks: ITask[] = await tasksWorker.listTasks();
-      return tasks;
+    async function getTasks(): Promise<ITaskList[]> {
+      const taskListsWorker: TaskLists.Worker = new TaskLists.Worker();
+      const taskLists: ITaskList[] = await taskListsWorker.listTasksLists();
+      return taskLists;
     };
     getTasks()
-      .then((tasks: ITask[]) => {
-        tasks.forEach((task: ITask) => {
-          this.addTaskToList(task);
+      .then((inTaskLists: ITaskList[]) => {
+        inTaskLists.forEach((inTaskList: ITaskList) => {
+          this.addTaskList(inTaskList);
         })
       })
       .then(() => {
@@ -93,6 +95,7 @@ export default class ToDoApp extends React.Component<Props, State> {
           <BaseLayout 
             showTaskLists = {this.state.showTaskLists}
             setShowTaskLists = {this.setShowTaskLists}
+            taskLists = {this.state.taskLists}
           />
         </div>
 

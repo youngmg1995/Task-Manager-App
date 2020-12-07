@@ -14,6 +14,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import React from "react";
 
 //local imports
+import { ITaskList } from "../TaskLists";
 import TaskListsDrawer from "./TaskListsDrawer";
 import ToDoAppBar from "./ToDoAppBar";
 
@@ -53,14 +54,19 @@ const useStyles: any = makeStyles(() => ({
 type Props = {
   showTaskLists: boolean,
   setShowTaskLists: (inVisible: boolean) => void;
+  taskLists: ITaskList[],
 };
 
 // actual component
 const BaseLayout: React.FC<Props> = (props) => {
   
-  const { children, showTaskLists, setShowTaskLists } = props;
+  const { children, showTaskLists, setShowTaskLists, taskLists } = props;
 
   const classes = useStyles();
+
+  const drawer = (
+    <TaskListsDrawer taskLists={taskLists} />
+  );
 
   return (
     <div className={classes.root}>
@@ -78,14 +84,14 @@ const BaseLayout: React.FC<Props> = (props) => {
           open={showTaskLists} onClose={() => setShowTaskLists(false)} 
           onOpen={() => setShowTaskLists(true)} 
         >
-          <TaskListsDrawer />
+          {drawer}
         </SwipeableDrawer>
       </Hidden>
       
       <Grid container alignItems="stretch" justify="center" className={classes.contentContainer}>
         <Hidden smDown>
           <Paper elevation={2} className={classes.taskListsPaper}>
-            <TaskListsDrawer />
+            {drawer}
           </Paper>
         </Hidden>
         <Grid item container xs alignItems="stretch" justify="center">

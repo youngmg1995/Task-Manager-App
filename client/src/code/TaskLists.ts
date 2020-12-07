@@ -7,18 +7,15 @@ import axios, { AxiosResponse } from "axios";
 
 // local imports
 import { config } from "./config";
+import { ITask } from "./Tasks";
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
 // ------------------------------------------------------------------- Task Interface ---------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-export interface ITask {
+export interface ITaskList {
   _id?: number,
   title: string,
-  category?: string,
-  dueDate?: string,
-  dueTime?: string,
-  description: string,
 };
 
 
@@ -29,55 +26,55 @@ export interface ITask {
 export class Worker {
   private serverAddress: string = config.serverAddress;
 
-  // // list tasks
-  // public async listTasks(): Promise<ITask[]> {
-  //   console.log("Client - GET /tasks");
-  //   const response: AxiosResponse = await axios.get(
-  //     `${this.serverAddress}/tasks`
-  //   );
-  //   console.log("Client - GET /task: response = ", response);
-  //   return response.data;
-  // }
-
-  // get specific tasks
-  public async getTask(inID: string): Promise<ITask> {
-    console.log("Client - GET /tasks/:id", inID);
+  // list tasks lists
+  public async listTasksLists(): Promise<ITaskList[]> {
+    console.log("Client - GET /tasklists");
     const response: AxiosResponse = await axios.get(
-      `${this.serverAddress}/tasks/${inID}`
+      `${this.serverAddress}/tasklists`
     );
-    console.log("Client - GET /task/:id: response = ", response);
+    console.log("Client - GET /task: response = ", response);
     return response.data;
   }
 
-  // create new task
-  public async createTask(inTask: ITask): Promise<ITask> {
-    console.log("Client - POST /tasks", inTask);
+  // create new task list
+  public async createTaskList(inTaskList: ITaskList): Promise<ITaskList> {
+    console.log("Client - POST /tasks", inTaskList);
     const response: AxiosResponse = await axios.post(
-      `${this.serverAddress}/tasks`,
-      inTask,
+      `${this.serverAddress}/tasklists`,
+      inTaskList,
     );
-    console.log("Client - POST /tasks: response = ", response);
+    console.log("Client - POST /tasklists: response = ", response);
     return response.data;
   }
 
-  // edit existing task
-  public async editTask(inID: string, inTask: ITask): Promise<ITask> {
-    console.log("Client - PUT /tasks", inID, inTask);
+  // edit existing task list
+  public async editTaskList(inID: string, inTaskList: ITaskList): Promise<ITaskList> {
+    console.log("Client - PUT /tasklists/:id", inID, inTaskList);
     const response: AxiosResponse = await axios.put(
       `${this.serverAddress}/tasks/${inID}`,
-      inTask,
+      inTaskList,
     );
-    console.log("Client - PUT /tasks/:id: response = ", response);
+    console.log("Client - PUT /tasklists/:id: response = ", response);
     return response.data;
   }
 
-  // delete existing task
-  public async deleteTask(inID: string): Promise<void> {
-    console.log("Client - DELETE /tasks/:id", inID);
+  // delete existing task list
+  public async deleteTaskList(inID: string): Promise<void> {
+    console.log("Client - DELETE /tasklists/:id", inID);
     const response: AxiosResponse = await axios.delete(
-      `${this.serverAddress}/tasks/${inID}`
+      `${this.serverAddress}/tasklists/${inID}`
     );
-    console.log("Client - DELETE /task/:id: response = ", response);
+    console.log("Client - DELETE /tasklists/:id: response = ", response);
+  }
+
+  // get tasks for specific task list
+  public async getTaskListTasks(inID: string): Promise<ITask> {
+    console.log("Client - GET /tasklists/:id", inID);
+    const response: AxiosResponse = await axios.get(
+      `${this.serverAddress}/tasklists/${inID}`
+    );
+    console.log("Client - GET /tasklists/:id: response = ", response);
+    return response.data;
   }
 
 };

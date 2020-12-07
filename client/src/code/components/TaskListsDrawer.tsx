@@ -13,6 +13,9 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 
+// local imports
+import { ITaskList } from "../TaskLists";
+
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
 // ------------------------------------------------------------------------ Styles ------------------------------------------------------------------------
@@ -31,12 +34,14 @@ const useStyles: any = makeStyles(() => ({
 
 // props and state types
 type Props = {
+  taskLists: ITaskList[],
 };
 
 // actual component
 const TaskListsDrawer: React.FC<Props> = (props) => {
   
-  const {  } = props;
+  const { taskLists } = props;
+  console.log(taskLists);
 
   const classes = useStyles();
 
@@ -53,21 +58,11 @@ const TaskListsDrawer: React.FC<Props> = (props) => {
         }
       >
         <Divider/>
-        <ListItem button>
-          <ListItemText primary="Task List 1"/>
-        </ListItem>
-        <ListItem button>
-          <ListItemText primary="Task List 2"/>
-        </ListItem>
-        <ListItem button>
-          <ListItemText primary="Task List 3"/>
-        </ListItem>
-        <ListItem button>
-          <ListItemText primary="Task List 4"/>
-        </ListItem>
-        <ListItem button>
-          <ListItemText primary="Task List 5"/>
-        </ListItem>
+        {taskLists.map((inTaskList) => (
+          <ListItem button key={inTaskList._id}>
+            <ListItemText primary={inTaskList.title} />
+          </ListItem>
+        ))}
       </List>
 
     </div>
