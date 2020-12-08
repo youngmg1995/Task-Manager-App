@@ -27,24 +27,37 @@ import ToDoAppBar from "./ToDoAppBar";
 
 const useStyles: any = makeStyles(() => ({
   root: {
-    display: "grid",
-    gridTemplateColumns: "1fr",
-    gridTemplateRows: "auto 1fr",
     width: "100vw",
     height: "100vh",
   },
   appBody: {
+    width: "100vw",
+    height: "100vh",
+    display: "grid",
+    gridTemplateColumns: "1fr",
+    gridTemplateRows: "auto 1fr",
+  },
+  appBar: {
+    gridColumn: "1/2",
+    gridRow: "1/2",
+  },
+  contentContainer: {
+    gridColumn: "1/2",
+    gridRow: "2/3",
     display: "grid",
     gridTemplateColumns: "auto 1fr",
     gridTemplateRows: "1fr",
+    overflow: "hidden",
   },
   drawerContainer: {
-    gridColumn: "1/1",
-    gridRow: "1/1"
+    gridColumn: "1/2",
+    gridRow: "1/2",
+    overflow: "hidden",
   },
   tasksContainer: {
-    gridColumn: "2/2",
-    gridRow: "1/1"
+    gridColumn: "2/3",
+    gridRow: "1/1",
+    overflow: "hidden",
   },
 }));
 
@@ -88,14 +101,8 @@ const BaseLayout: React.FC<Props> = (props) => {
   );
 
   return (
+    
     <div className={classes.root}>
-      
-      <div>
-        <ToDoAppBar
-          showTaskLists={showTaskLists}
-          setShowTaskLists={setShowTaskLists}
-        />
-      </div>
 
       <Hidden mdUp>
         <SwipeableDrawer 
@@ -108,15 +115,28 @@ const BaseLayout: React.FC<Props> = (props) => {
       </Hidden>
 
       <div className={classes.appBody}>
-        <Hidden smDown>
-          <div className={classes.drawerContainer}>
-            {drawer}
-          </div>
-        </Hidden>
 
-        <div className={classes.tasksContainer}>
-          <TaskListUI tasks={tasks}/>
+        <div className={classes.appBar}>
+          <ToDoAppBar
+            showTaskLists={showTaskLists}
+            setShowTaskLists={setShowTaskLists}
+          />
         </div>
+
+        <div className={classes.contentContainer}>
+          
+          <Hidden smDown>
+            <div className={classes.drawerContainer}>
+              {drawer}
+            </div>
+          </Hidden>
+
+          <div className={classes.tasksContainer}>
+            <TaskListUI tasks={tasks}/>
+          </div>
+
+        </div>
+
       </div>
 
     </div>

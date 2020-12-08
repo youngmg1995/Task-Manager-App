@@ -5,11 +5,9 @@
 // node modules
 import React from "react";
 import {
-  Divider,
   List,
   ListItem,
   ListItemText,
-  ListSubheader,
 } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -24,7 +22,25 @@ import { ITaskList } from "../TaskLists";
 const useStyles: any = makeStyles(() => ({
   root: {
     width: 250,
+    height: "100%",
+    display: "grid",
+    gridTemplateColumns: "1fr",
+    gridTemplateRows: "auto 1fr",
+    overflow: "hidden",
   },
+  headerContainer: {
+    gridColumn: "1/2",
+    gridRow: "1/2",
+  },
+  taskListsContainer: {
+    gridColumn: "1/2",
+    gridRow: "2/3",
+    overflow: "hidden",
+  },
+  taskLists: {
+    maxHeight: "100%",
+    overflow: "auto",
+  }
 }));
 
 
@@ -51,41 +67,42 @@ const TaskListsDrawer: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   return (
+
     <div className={classes.root}>
 
-      <List
-        component="nav"
-        subheader={
-          <ListSubheader>
-            <ListItemText primary="Task Lists"/>
-          </ListSubheader>
-        }
-      >
+      <div className={classes.headerContainer}>
+        Task Lists Header
+      </div>
 
-        <Divider/>
-
-        <ListItem 
-          button
-          selected={selectedTaskList === null}
-          onClick={() => setSelectedTaskList(null)}
+      <div className={classes.taskListsContainer}>
+        <List
+          component="nav"
+          className={classes.taskLists}
         >
-          <ListItemText primary="All Tasks" />
-        </ListItem>
-
-        {taskLists.map((inTaskList) => (
-          <ListItem
-            key={inTaskList._id} 
+          <ListItem 
             button
-            selected={selectedTaskList?._id === inTaskList._id}
-            onClick={() => setSelectedTaskList(inTaskList)}
+            selected={selectedTaskList === null}
+            onClick={() => setSelectedTaskList(null)}
           >
-            <ListItemText primary={inTaskList.title} />
+            <ListItemText primary="All Tasks" />
           </ListItem>
-        ))}
 
-      </List>
+          {taskLists.map((inTaskList) => (
+            <ListItem
+              key={inTaskList._id} 
+              button
+              selected={selectedTaskList?._id === inTaskList._id}
+              onClick={() => setSelectedTaskList(inTaskList)}
+            >
+              <ListItemText primary={inTaskList.title} />
+            </ListItem>
+          ))}
+
+        </List>
+      </div>
 
     </div>
+
   );
 };
 
