@@ -9,9 +9,11 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListSubheader,
 } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
+
+// local imports
+import { ITaskList } from "../TaskLists";
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -20,8 +22,26 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles: any = makeStyles(() => ({
   root: {
-    width: 160,
+    width: 250,
+    height: "100%",
+    display: "grid",
+    gridTemplateColumns: "1fr",
+    gridTemplateRows: "auto 1fr",
+    overflow: "hidden",
   },
+  headerContainer: {
+    gridColumn: "1/2",
+    gridRow: "1/2",
+  },
+  taskListsContainer: {
+    gridColumn: "1/2",
+    gridRow: "2/3",
+    overflow: "hidden",
+  },
+  taskLists: {
+    maxHeight: "100%",
+    overflow: "auto",
+  }
 }));
 
 
@@ -31,46 +51,60 @@ const useStyles: any = makeStyles(() => ({
 
 // props and state types
 type Props = {
+  taskLists: ITaskList[],
+  selectedTaskList: ITaskList | null,
+  setSelectedTaskList: (inTaskList: ITaskList | null) => Promise<void>;
 };
 
 // actual component
 const TaskListsDrawer: React.FC<Props> = (props) => {
   
-  const {  } = props;
+  const { 
+    taskLists,
+    selectedTaskList,
+    setSelectedTaskList,
+  } = props;
 
   const classes = useStyles();
 
   return (
+
     <div className={classes.root}>
 
-      <List
-        component="nav"
-        aria-labelledby="list-subheader"
-        subheader={
-          <ListSubheader component="div" id="list-subheader">
-            Task Lists
-          </ListSubheader>
-        }
-      >
+      <div className={classes.headerContainer}>
+        Task Lists Header
         <Divider/>
-        <ListItem button>
-          <ListItemText primary="Task List 1"/>
-        </ListItem>
-        <ListItem button>
-          <ListItemText primary="Task List 2"/>
-        </ListItem>
-        <ListItem button>
-          <ListItemText primary="Task List 3"/>
-        </ListItem>
-        <ListItem button>
-          <ListItemText primary="Task List 4"/>
-        </ListItem>
-        <ListItem button>
-          <ListItemText primary="Task List 5"/>
-        </ListItem>
-      </List>
+      </div>
+
+      <div className={classes.taskListsContainer}>
+        <List
+          component="nav"
+          className={classes.taskLists}
+        >
+          <ListItem 
+            button
+            selected={selectedTaskList === null}
+            onClick={() => setSelectedTaskList(null)}
+          >
+            <ListItemText primary="All Tasks" />
+          </ListItem>
+
+          {taskLists.map((inTaskList) => (
+            <ListItem
+              key={inTaskList._id} 
+              button
+              selected={selectedTaskList?._id === inTaskList._id}
+              onClick={() => setSelectedTaskList(inTaskList)}
+            >
+              <ListItemText primary={inTaskList.title} />
+            </ListItem>
+          ))}
+
+        </List>
+      </div>
 
     </div>
+
   );
 };
 

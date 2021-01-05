@@ -3,22 +3,20 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // node modules
-import { 
-  // Container,
-  // Divider,
-  // Grid,
-  Hidden,
-  SwipeableDrawer,
+import React from "react";
+import {
+  Checkbox,
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemSecondaryAction,
+  ListItemText,
 } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
-import React from "react";
+import WhatshotIcon from '@material-ui/icons/Whatshot';
 
-//local imports
-import { ITask } from "../Tasks";
-import { ITaskList } from "../TaskLists";
-import TaskListsDrawer from "./TaskListsDrawer";
-import TaskListUI from "./TaskListUI";
-import ToDoAppBar from "./ToDoAppBar";
+// local imports
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -27,38 +25,25 @@ import ToDoAppBar from "./ToDoAppBar";
 
 const useStyles: any = makeStyles(() => ({
   root: {
-    width: "100vw",
-    height: "100vh",
-  },
-  appBody: {
-    width: "100vw",
-    height: "100vh",
+    width: "100%",
+    height: "100%",
     display: "grid",
     gridTemplateColumns: "1fr",
     gridTemplateRows: "auto 1fr",
   },
-  appBar: {
+  toolbarContainer: {
     gridColumn: "1/2",
     gridRow: "1/2",
   },
-  contentContainer: {
+  taskListContainer: {
     gridColumn: "1/2",
     gridRow: "2/3",
-    display: "grid",
-    gridTemplateColumns: "auto 1fr",
-    gridTemplateRows: "1fr",
     overflow: "hidden",
   },
-  drawerContainer: {
-    gridColumn: "1/2",
-    gridRow: "1/2",
-    overflow: "hidden",
-  },
-  tasksContainer: {
-    gridColumn: "2/3",
-    gridRow: "1/1",
-    overflow: "hidden",
-  },
+  taskList: {
+    maxHeight: "100%",
+    overflow: "auto",
+  }
 }));
 
 
@@ -68,78 +53,44 @@ const useStyles: any = makeStyles(() => ({
 
 // props and state types
 type Props = {
-  showTaskLists: boolean,
-  setShowTaskLists: (inVisible: boolean) => void;
-  taskLists: ITaskList[],
-  selectedTaskList: ITaskList | null,
-  setSelectedTaskList: (inTaskList: ITaskList | null) => Promise<void>;
   tasks: any[],
-  selectedTask: ITask | null,
 };
 
 // actual component
-const BaseLayout: React.FC<Props> = (props) => {
+const TaskListUI: React.FC<Props> = (props) => {
   
-  const { 
-    showTaskLists, 
-    setShowTaskLists, 
-    taskLists, 
-    selectedTaskList,
-    setSelectedTaskList,
-    tasks,  
-    // selectedTask,
-  } = props;
+  const { tasks } = props;
 
   const classes = useStyles();
 
-  const drawer = (
-    <TaskListsDrawer 
-      taskLists={taskLists}
-      selectedTaskList={selectedTaskList}
-      setSelectedTaskList={setSelectedTaskList}
-    />
-  );
-
   return (
-    
+
     <div className={classes.root}>
 
-      <Hidden mdUp>
-        <SwipeableDrawer 
-          anchor="left" 
-          open={showTaskLists} onClose={() => setShowTaskLists(false)} 
-          onOpen={() => setShowTaskLists(true)} 
-        >
-          {drawer}
-        </SwipeableDrawer>
-      </Hidden>
+      <div className={classes.toolbarContainer}>
+        toolbar
+      </div>
 
-      <div className={classes.appBody}>
-
-        <div className={classes.appBar}>
-          <ToDoAppBar
-            showTaskLists={showTaskLists}
-            setShowTaskLists={setShowTaskLists}
-          />
-        </div>
-
-        <div className={classes.contentContainer}>
-          
-          <Hidden smDown>
-            <div className={classes.drawerContainer}>
-              {drawer}
-            </div>
-          </Hidden>
-
-          <div className={classes.tasksContainer}>
-            <TaskListUI tasks={tasks}/>
-          </div>
-
-        </div>
-
+      <div className={classes.taskListContainer}>
+        <List className={classes.taskList}>
+          {tasks.map((inTask) => (
+            <ListItem key={inTask._id} divider>
+              <ListItemIcon>
+                <Checkbox/>
+              </ListItemIcon>
+              <ListItemText primary={inTask.title} />
+              <ListItemSecondaryAction>
+                <IconButton>
+                  <WhatshotIcon />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+          ))}
+        </List>
       </div>
 
     </div>
+
   );
 };
 
@@ -148,7 +99,7 @@ const BaseLayout: React.FC<Props> = (props) => {
 // ----------------------------------------------------------------------- Exports ------------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-export default BaseLayout;
+export default TaskListUI;
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
