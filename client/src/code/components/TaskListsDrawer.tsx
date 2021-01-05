@@ -5,6 +5,7 @@
 // node modules
 import React from "react";
 import {
+  Divider,
   List,
   ListItem,
   ListItemText,
@@ -72,6 +73,7 @@ const TaskListsDrawer: React.FC<Props> = (props) => {
 
       <div className={classes.headerContainer}>
         Task Lists Header
+        <Divider/>
       </div>
 
       <div className={classes.taskListsContainer}>
