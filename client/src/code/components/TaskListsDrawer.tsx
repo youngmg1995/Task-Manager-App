@@ -5,12 +5,14 @@
 // node modules
 import React from "react";
 import {
-  Divider,
+  IconButton,
   List,
   ListItem,
   ListItemText,
+  Typography,
 } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 // local imports
 import { ITaskList } from "../TaskLists";
@@ -32,6 +34,14 @@ const useStyles: any = makeStyles(() => ({
   headerContainer: {
     gridColumn: "1/2",
     gridRow: "1/2",
+    padding: "8px 8px",
+    display: "flex",
+    justifyContent: "start",
+    alignItems: "center",
+  },
+  headerTitle: {
+  },
+  composeButton: {
   },
   taskListsContainer: {
     gridColumn: "1/2",
@@ -41,6 +51,7 @@ const useStyles: any = makeStyles(() => ({
   taskLists: {
     maxHeight: "100%",
     overflow: "auto",
+    padding: "0",
   }
 }));
 
@@ -67,13 +78,23 @@ const TaskListsDrawer: React.FC<Props> = (props) => {
 
   const classes = useStyles();
 
+  function handleComposeClick(): void {
+    
+    alert("User clicked on compoes new task list button.")
+
+  };
+
   return (
 
     <div className={classes.root}>
 
       <div className={classes.headerContainer}>
-        Task Lists Header
-        <Divider/>
+        <Typography variant="h6" className={classes.headerTitle}>
+          Task Lists
+        </Typography>
+        <IconButton color="primary" aria-label="compose-taskList" onClick={handleComposeClick} className={classes.composeButton}>
+          <AddCircleIcon fontSize="large"/>
+        </IconButton>
       </div>
 
       <div className={classes.taskListsContainer}>
