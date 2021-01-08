@@ -6,13 +6,15 @@
 import React from "react";
 import {
   AppBar,
+  Fab,
   Hidden,
   IconButton,
   Toolbar,
   Typography,
 } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
+// import AddCircleIcon from '@material-ui/icons/AddCircle';
+import AddIcon from '@material-ui/icons/Add';
 import MenuIcon from "@material-ui/icons/Menu";
 
 
@@ -29,6 +31,8 @@ const useStyles: any = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
+  },
+  composeButton: {
   },
 }));
 
@@ -61,9 +65,13 @@ const ToDoAppBar: React.FC<Props> = (props) => {
         <Typography variant="h6" className={classes.title}>
           ToDo App
         </Typography>
-        <IconButton edge="end" color="inherit" aria-label="menu">
+        <Fab color="inherit" size="medium" aria-label="menu" className={classes.composeButton}>
+          <AddIcon color="primary" fontSize="large"/>
+        </Fab>
+        {/* Old Compose Button */}
+        {/* <IconButton edge="end" color="inherit" aria-label="menu">
           <AddCircleIcon fontSize="large"/>
-        </IconButton>
+        </IconButton> */}
       </Toolbar>
     </AppBar>
   );
