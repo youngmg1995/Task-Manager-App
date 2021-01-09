@@ -3,19 +3,20 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // node modules
+import React from "react";
 import {
-  Hidden,
-  SwipeableDrawer,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    // DialogContentText,
+    DialogTitle,
+    TextField,
 } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
-import React from "react";
 
-//local imports
-import { ITask } from "../Tasks";
+// local imports
 import { ITaskList } from "../TaskLists";
-import TaskListsDrawer from "./TaskListsDrawer";
-import TaskListUI from "./TaskListUI";
-import ToDoAppBar from "./ToDoAppBar";
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -24,37 +25,6 @@ import ToDoAppBar from "./ToDoAppBar";
 
 const useStyles: any = makeStyles(() => ({
   root: {
-    width: "100vw",
-    height: "100vh",
-  },
-  appBody: {
-    width: "100vw",
-    height: "100vh",
-    display: "grid",
-    gridTemplateColumns: "1fr",
-    gridTemplateRows: "auto 1fr",
-  },
-  appBar: {
-    gridColumn: "1/2",
-    gridRow: "1/2",
-  },
-  contentContainer: {
-    gridColumn: "1/2",
-    gridRow: "2/3",
-    display: "grid",
-    gridTemplateColumns: "auto 1fr",
-    gridTemplateRows: "1fr",
-    overflow: "hidden",
-  },
-  drawerContainer: {
-    gridColumn: "1/2",
-    gridRow: "1/2",
-    overflow: "hidden",
-  },
-  tasksContainer: {
-    gridColumn: "2/3",
-    gridRow: "1/1",
-    overflow: "hidden",
   },
 }));
 
@@ -65,82 +35,84 @@ const useStyles: any = makeStyles(() => ({
 
 // props and state types
 type Props = {
-  showTaskLists: boolean,
-  setShowTaskLists: (inVisible: boolean) => void;
-  setShowTaskListDialog: (inVisible: boolean) => void;
-  taskLists: ITaskList[],
-  selectedTaskList: ITaskList | null,
-  setSelectedTaskList: (inTaskList: ITaskList | null) => Promise<void>;
-  tasks: any[],
-  selectedTask: ITask | null,
+  open: boolean,
+  setOpen: (inVisible: boolean) => void,
+  taskList: ITaskList,
+  setTaskList: (inTaskList?: ITaskList) => void,
+  submitTaskList: () => Promise<void>,
 };
 
 // actual component
-const BaseLayout: React.FC<Props> = (props) => {
+const TaskListDialog: React.FC<Props> = (props) => {
   
-  const { 
-    showTaskLists, 
-    setShowTaskLists, 
-    setShowTaskListDialog,
-    taskLists, 
-    selectedTaskList,
-    setSelectedTaskList,
-    tasks,  
-    // selectedTask,
+  const {
+    open,
+    setOpen,
+    taskList,
+    setTaskList,
+    submitTaskList,
   } = props;
+
+  function handleClose(): void {
+    setTaskList();
+    setOpen(false);
+  }
+
+  function handleFormChange(event: any): void {
+    const newTaskList: ITaskList = Object.assign(
+      {}, 
+      taskList,
+      { [event.target.id]: event.target.value }
+    );
+    setTaskList(newTaskList);
+  }
+
+  function handleSubmit(): void {
+    submitTaskList();
+  }
 
   const classes = useStyles();
 
-  const drawer = (
-    <TaskListsDrawer 
-      taskLists={taskLists}
-      selectedTaskList={selectedTaskList}
-      setSelectedTaskList={setSelectedTaskList}
-      setShowTaskListDialog={setShowTaskListDialog}
-    />
-  );
-
   return (
-    
-    <div className={classes.root}>
 
-      <Hidden mdUp>
-        <SwipeableDrawer 
-          anchor="left" 
-          open={showTaskLists} onClose={() => setShowTaskLists(false)} 
-          onOpen={() => setShowTaskLists(true)} 
-        >
-          {drawer}
-        </SwipeableDrawer>
-      </Hidden>
+    <Dialog 
+      open={open}
+      aria-labelledby="form-dialog-title"
+      fullWidth
+      maxWidth="sm"
+      className={classes.root}
+    >
 
-      <div className={classes.appBody}>
+      <DialogTitle id="form-dialog-title">
+        New Task List
+      </DialogTitle>
 
-        <div className={classes.appBar}>
-          <ToDoAppBar
-            showTaskLists={showTaskLists}
-            setShowTaskLists={setShowTaskLists}
-          />
-        </div>
+      <DialogContent>
+        {/* title */}
+        <TextField
+          autoFocus
+          margin="dense"
+          id="title"
+          label="Title"
+          fullWidth
+          value={taskList.title}
+          onChange={handleFormChange}
+        />
+      </DialogContent>
 
-        <div className={classes.contentContainer}>
-          
-          <Hidden smDown>
-            <div className={classes.drawerContainer}>
-              {drawer}
-            </div>
-          </Hidden>
+      <DialogActions>
+        <Button onClick={handleClose} color="primary">
+          Cancel
+        </Button>
+        <Button onClick={handleSubmit} color="primary" type="submit" form="task-list-form">
+          Submit
+        </Button>
+      </DialogActions>
 
-          <div className={classes.tasksContainer}>
-            <TaskListUI tasks={tasks}/>
-          </div>
+    </Dialog>
 
-        </div>
-
-      </div>
-
-    </div>
   );
+
 };
 
 
@@ -148,7 +120,7 @@ const BaseLayout: React.FC<Props> = (props) => {
 // ----------------------------------------------------------------------- Exports ------------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-export default BaseLayout;
+export default TaskListDialog;
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -65,6 +65,7 @@ type Props = {
   taskLists: ITaskList[],
   selectedTaskList: ITaskList | null,
   setSelectedTaskList: (inTaskList: ITaskList | null) => Promise<void>;
+  setShowTaskListDialog: (inVisible: boolean) => void;
 };
 
 // actual component
@@ -74,13 +75,14 @@ const TaskListsDrawer: React.FC<Props> = (props) => {
     taskLists,
     selectedTaskList,
     setSelectedTaskList,
+    setShowTaskListDialog
   } = props;
 
   const classes = useStyles();
 
   function handleComposeClick(): void {
     
-    alert("User clicked on compoes new task list button.")
+    setShowTaskListDialog(true);
 
   };
 

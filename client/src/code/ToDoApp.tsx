@@ -9,6 +9,7 @@ import React from "react";
 import {
   // LoadingScreen,
   BaseLayout,
+  TaskListDialog,
 } from "./components";
 import * as Tasks from "./Tasks";
 import { ITask } from "./Tasks";
@@ -27,6 +28,8 @@ type Props = {
 type State = {
   showLoadingScreen: boolean,
   showTaskLists: boolean,
+  showTaskListDialog: boolean,
+  dialogTaskList: ITaskList,
   taskLists: ITaskList[],
   selectedTaskList: ITaskList | null,
   tasks: any[],
@@ -41,6 +44,10 @@ export default class ToDoApp extends React.Component<Props, State> {
     this.state = {
       showLoadingScreen: true,
       showTaskLists: false,
+      showTaskListDialog: false,
+      dialogTaskList: {
+        title: "",
+      },
       taskLists: [],
       selectedTaskList: null,
       tasks: [],
@@ -49,6 +56,9 @@ export default class ToDoApp extends React.Component<Props, State> {
 
     this.setShowLoadingScreen = this.setShowLoadingScreen.bind(this);
     this.setShowTaskLists = this.setShowTaskLists.bind(this);
+    this.setShowTaskListDialog = this.setShowTaskListDialog.bind(this);
+    this.setDialogTaskList = this.setDialogTaskList.bind(this);
+    this.submitTaskListDialog = this.submitTaskListDialog.bind(this);
     this.addTaskList = this.addTaskList.bind(this);
     this.setSelectedTaskList = this.setSelectedTaskList.bind(this);
   }
@@ -64,6 +74,38 @@ export default class ToDoApp extends React.Component<Props, State> {
       showTaskLists: inVisible,
     });
   };
+
+  setShowTaskListDialog(inVisible: boolean): void {
+    this.setState({
+      showTaskListDialog: inVisible,
+    });
+  };
+
+  setDialogTaskList(inTaskList: ITaskList = {title:""}): void {
+    this.setState({
+      dialogTaskList: inTaskList,
+    });
+  };
+
+  async submitTaskListDialog(): Promise<void> {
+    console.log(this.state.dialogTaskList);
+
+    const worker: TaskLists.Worker = new TaskLists.Worker();
+
+    // for editing existing task list
+    if (this.state.dialogTaskList._id) {
+    }
+    // for creating and adding new task list
+    else {
+      const newTaskList: ITaskList = await worker.createTaskList(this.state.dialogTaskList);
+      this.setState(state => ({
+        taskLists: state.taskLists.concat(newTaskList),
+        showTaskListDialog: false,
+        dialogTaskList: {title:""},
+      }));
+    }
+
+  }
 
   addTaskList(inTaskList: ITaskList): void {
     const newTaskLists: ITaskList[] = this.state.taskLists.concat(inTaskList);
@@ -134,6 +176,7 @@ export default class ToDoApp extends React.Component<Props, State> {
           <BaseLayout 
             showTaskLists = {this.state.showTaskLists}
             setShowTaskLists = {this.setShowTaskLists}
+            setShowTaskListDialog = {this.setShowTaskListDialog}
             taskLists = {this.state.taskLists}
             selectedTaskList={this.state.selectedTaskList}
             setSelectedTaskList={this.setSelectedTaskList}
@@ -141,6 +184,14 @@ export default class ToDoApp extends React.Component<Props, State> {
             selectedTask={this.state.selectedTask}
           />
         </div>
+
+        <TaskListDialog 
+          open={this.state.showTaskListDialog}
+          setOpen = {this.setShowTaskListDialog}
+          taskList={this.state.dialogTaskList}
+          setTaskList={this.setDialogTaskList}
+          submitTaskList={this.submitTaskListDialog}
+        />
 
       </div>
     );
