@@ -33,6 +33,8 @@ const useStyles: any = makeStyles((theme) => ({
     flexGrow: 1,
   },
   composeButton: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
   },
 }));
 
