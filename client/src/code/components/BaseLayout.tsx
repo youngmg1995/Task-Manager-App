@@ -68,10 +68,11 @@ type Props = {
   showTaskLists: boolean,
   setShowTaskLists: (inVisible: boolean) => void;
   setShowTaskListDialog: (inVisible: boolean) => void;
+  setShowTaskDialog: (inVisible: boolean) => void;
   taskLists: ITaskList[],
   selectedTaskList: ITaskList | null,
   setSelectedTaskList: (inTaskList: ITaskList | null) => Promise<void>;
-  tasks: any[],
+  tasks: ITask[],
   selectedTask: ITask | null,
 };
 
@@ -82,6 +83,7 @@ const BaseLayout: React.FC<Props> = (props) => {
     showTaskLists, 
     setShowTaskLists, 
     setShowTaskListDialog,
+    setShowTaskDialog,
     taskLists, 
     selectedTaskList,
     setSelectedTaskList,
@@ -120,6 +122,7 @@ const BaseLayout: React.FC<Props> = (props) => {
           <ToDoAppBar
             showTaskLists={showTaskLists}
             setShowTaskLists={setShowTaskLists}
+            setShowTaskDialog={setShowTaskDialog}
           />
         </div>
 

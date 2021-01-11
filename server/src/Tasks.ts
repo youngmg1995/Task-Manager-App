@@ -14,7 +14,7 @@ import Datastore from "nedb";
 export interface ITask {
   _id?: number,
   title: string,
-  taskList: number,
+  taskList?: number,
   description: string,
 }
 
@@ -32,7 +32,7 @@ export class Worker {
       filename: path.join(__dirname, "tasks.db"),
       autoload: true
     });
-    this.db.ensureIndex({ fieldName: "taskList" });
+    // this.db.ensureIndex({ fieldName: "taskList" });
   }
 
   // list tasks
@@ -155,7 +155,7 @@ export class Worker {
     });
   }
 
-  // delete all taks for a specific TaskList
+  // delete all tasks for a specific TaskList
   public deleteTaskList(inTaskListID: string): Promise<void> {
     return new Promise((inResolve, inReject) => {
       this.db.remove(

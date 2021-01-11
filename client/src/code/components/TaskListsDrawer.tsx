@@ -80,10 +80,8 @@ const TaskListsDrawer: React.FC<Props> = (props) => {
 
   const classes = useStyles();
 
-  function handleComposeClick(): void {
-    
+  function handleComposeClick(): void {    
     setShowTaskListDialog(true);
-
   };
 
   return (

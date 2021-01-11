@@ -5,16 +5,15 @@
 // node modules
 import React from "react";
 import {
-  Checkbox,
-  IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemSecondaryAction,
-  ListItemText,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    // DialogContentText,
+    DialogTitle,
+    TextField,
 } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
-import WhatshotIcon from '@material-ui/icons/Whatshot';
 
 // local imports
 import { ITask } from "../Tasks";
@@ -26,25 +25,7 @@ import { ITask } from "../Tasks";
 
 const useStyles: any = makeStyles(() => ({
   root: {
-    width: "100%",
-    height: "100%",
-    display: "grid",
-    gridTemplateColumns: "1fr",
-    gridTemplateRows: "auto 1fr",
   },
-  toolbarContainer: {
-    gridColumn: "1/2",
-    gridRow: "1/2",
-  },
-  taskListContainer: {
-    gridColumn: "1/2",
-    gridRow: "2/3",
-    overflow: "hidden",
-  },
-  taskList: {
-    maxHeight: "100%",
-    overflow: "auto",
-  }
 }));
 
 
@@ -54,45 +35,95 @@ const useStyles: any = makeStyles(() => ({
 
 // props and state types
 type Props = {
-  tasks: ITask[],
+  open: boolean,
+  setOpen: (inVisible: boolean) => void,
+  task: ITask,
+  setTask: (inTask?: ITask) => void,
+  submitTask: () => Promise<void>,
 };
 
 // actual component
-const TaskListUI: React.FC<Props> = (props) => {
+const TaskDialog: React.FC<Props> = (props) => {
   
-  const { tasks } = props;
+  const {
+    open,
+    setOpen,
+    task,
+    setTask,
+    submitTask,
+  } = props;
+
+  function handleClose(): void {
+    setTask();
+    setOpen(false);
+  }
+
+  function handleFormChange(event: any): void {
+    const newTask: ITask = Object.assign(
+      {}, 
+      task,
+      { [event.target.id]: event.target.value }
+    );
+    setTask(newTask);
+  }
+
+  function handleSubmit(): void {
+    submitTask();
+  }
 
   const classes = useStyles();
 
   return (
 
-    <div className={classes.root}>
+    <Dialog 
+      open={open}
+      aria-labelledby="form-dialog-title"
+      fullWidth
+      maxWidth="sm"
+      className={classes.root}
+    >
 
-      <div className={classes.toolbarContainer}>
-        toolbar
-      </div>
+      <DialogTitle id="form-dialog-title">
+        New Task List
+      </DialogTitle>
 
-      <div className={classes.taskListContainer}>
-        <List className={classes.taskList}>
-          {tasks.map((inTask) => (
-            <ListItem key={inTask._id} divider>
-              <ListItemIcon>
-                <Checkbox/>
-              </ListItemIcon>
-              <ListItemText primary={inTask.title} />
-              <ListItemSecondaryAction>
-                <IconButton>
-                  <WhatshotIcon />
-                </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>
-          ))}
-        </List>
-      </div>
+      <DialogContent>
+        <form noValidate autoComplete="off">
+          {/* title */}
+          <TextField
+            autoFocus
+            margin="dense"
+            id="title"
+            label="Title"
+            fullWidth
+            value={task.title}
+            onChange={handleFormChange}
+          />
+          {/* description */}
+          <TextField
+            margin="dense"
+            id="description"
+            label="Description"
+            fullWidth
+            value={task.description}
+            onChange={handleFormChange}
+          />
+        </form>
+      </DialogContent>
 
-    </div>
+      <DialogActions>
+        <Button onClick={handleClose} color="primary">
+          Cancel
+        </Button>
+        <Button onClick={handleSubmit} color="primary">
+          Submit
+        </Button>
+      </DialogActions>
+
+    </Dialog>
 
   );
+
 };
 
 
@@ -100,7 +131,7 @@ const TaskListUI: React.FC<Props> = (props) => {
 // ----------------------------------------------------------------------- Exports ------------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-export default TaskListUI;
+export default TaskDialog;
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------

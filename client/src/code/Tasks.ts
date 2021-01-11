@@ -15,7 +15,7 @@ import { config } from "./config";
 export interface ITask {
   _id?: number,
   title: string,
-  category?: string,
+  taskList?: number,
   dueDate?: string,
   dueTime?: string,
   description: string,

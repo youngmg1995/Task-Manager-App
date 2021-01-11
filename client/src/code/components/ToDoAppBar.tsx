@@ -47,14 +47,23 @@ const useStyles: any = makeStyles((theme) => ({
 type Props = {
   showTaskLists: boolean,
   setShowTaskLists: (inVisible: boolean) => void;
+  setShowTaskDialog: (inVisible: boolean) => void;
 };
 
 // actual component
 const ToDoAppBar: React.FC<Props> = (props) => {
   
-  const { showTaskLists, setShowTaskLists } = props;
+  const { 
+    showTaskLists,
+    setShowTaskLists,
+    setShowTaskDialog,
+  } = props;
 
   const classes = useStyles();
+
+  function handleComposeClick(): void {
+    setShowTaskDialog(true);
+  };
 
   return (
     <AppBar position="static">
@@ -67,7 +76,7 @@ const ToDoAppBar: React.FC<Props> = (props) => {
         <Typography variant="h6" className={classes.title}>
           ToDo App
         </Typography>
-        <Fab color="inherit" size="medium" aria-label="menu" className={classes.composeButton}>
+        <Fab color="inherit" size="medium" aria-label="menu" onClick={handleComposeClick} className={classes.composeButton}>
           <AddIcon color="primary" fontSize="large"/>
         </Fab>
         {/* Old Compose Button */}

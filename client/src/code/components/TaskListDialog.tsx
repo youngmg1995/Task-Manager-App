@@ -88,23 +88,25 @@ const TaskListDialog: React.FC<Props> = (props) => {
       </DialogTitle>
 
       <DialogContent>
-        {/* title */}
-        <TextField
-          autoFocus
-          margin="dense"
-          id="title"
-          label="Title"
-          fullWidth
-          value={taskList.title}
-          onChange={handleFormChange}
-        />
+        <form noValidate autoComplete="off">
+          {/* title */}
+          <TextField
+            autoFocus
+            margin="dense"
+            id="title"
+            label="Title"
+            fullWidth
+            value={taskList.title}
+            onChange={handleFormChange}
+          />
+        </form>
       </DialogContent>
 
       <DialogActions>
         <Button onClick={handleClose} color="primary">
           Cancel
         </Button>
-        <Button onClick={handleSubmit} color="primary" type="submit" form="task-list-form">
+        <Button onClick={handleSubmit} color="primary">
           Submit
         </Button>
       </DialogActions>

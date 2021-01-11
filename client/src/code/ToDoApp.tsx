@@ -9,6 +9,7 @@ import React from "react";
 import {
   // LoadingScreen,
   BaseLayout,
+  TaskDialog,
   TaskListDialog,
 } from "./components";
 import * as Tasks from "./Tasks";
@@ -30,9 +31,11 @@ type State = {
   showTaskLists: boolean,
   showTaskListDialog: boolean,
   dialogTaskList: ITaskList,
+  showTaskDialog: boolean,
+  dialogTask: ITask,
   taskLists: ITaskList[],
   selectedTaskList: ITaskList | null,
-  tasks: any[],
+  tasks: ITask[],
   selectedTask: ITask | null,
 };
 
@@ -48,17 +51,34 @@ export default class ToDoApp extends React.Component<Props, State> {
       dialogTaskList: {
         title: "",
       },
+      showTaskDialog: false,
+      dialogTask: {
+        title: "",
+        description: "",
+      },
       taskLists: [],
       selectedTaskList: null,
       tasks: [],
       selectedTask: null,
     };
 
+    // for toggling loading screen
     this.setShowLoadingScreen = this.setShowLoadingScreen.bind(this);
+
+    // for controling various components the user can view and interact with
     this.setShowTaskLists = this.setShowTaskLists.bind(this);
+
+    // for creating and editing task lists
     this.setShowTaskListDialog = this.setShowTaskListDialog.bind(this);
     this.setDialogTaskList = this.setDialogTaskList.bind(this);
     this.submitTaskListDialog = this.submitTaskListDialog.bind(this);
+
+    // for creating and editing tasks
+    this.setShowTaskDialog = this.setShowTaskDialog.bind(this);
+    this.setDialogTask = this.setDialogTask.bind(this);
+    this.submitTaskDialog = this.submitTaskDialog.bind(this);
+
+    // other functionalities ( Ex: switching between selected task lists and tasks to view)
     this.addTaskList = this.addTaskList.bind(this);
     this.setSelectedTaskList = this.setSelectedTaskList.bind(this);
   }
@@ -106,6 +126,45 @@ export default class ToDoApp extends React.Component<Props, State> {
     }
 
   }
+
+  setShowTaskDialog(inVisible: boolean): void {
+    this.setState({
+      showTaskDialog: inVisible,
+    });
+  };
+
+  setDialogTask(inTask: ITask = { title: "", description: "", } ): void {
+    this.setState({
+      dialogTask: inTask,
+    });
+  };
+
+  async submitTaskDialog(): Promise<void> {
+    console.log(this.state.dialogTask);
+
+    const worker: Tasks.Worker = new Tasks.Worker();
+
+    // for editing existing task list
+    if (this.state.dialogTaskList._id) {
+    }
+    // for creating and adding new task list
+    else {
+      const newTask: ITask = await worker.createTask(this.state.dialogTask);
+      if (this.state.selectedTaskList === null || newTask.taskList === this.state.selectedTaskList?._id) {
+        this.setState(state => ({
+          tasks: [newTask].concat(state.tasks),
+          showTaskDialog: false,
+          dialogTask: { title: "", description: "", },
+        }));
+      } else {
+        this.setState({
+          showTaskDialog: false,
+          dialogTask: { title: "", description: "", },
+        });
+      }
+    }
+
+  };
 
   addTaskList(inTaskList: ITaskList): void {
     const newTaskLists: ITaskList[] = this.state.taskLists.concat(inTaskList);
@@ -172,18 +231,25 @@ export default class ToDoApp extends React.Component<Props, State> {
           <LoadingScreen showLoadingScreen={this.state.showLoadingScreen}/>
         </div> */}
 
-        <div className="BaseLayout">
-          <BaseLayout 
-            showTaskLists = {this.state.showTaskLists}
-            setShowTaskLists = {this.setShowTaskLists}
-            setShowTaskListDialog = {this.setShowTaskListDialog}
-            taskLists = {this.state.taskLists}
-            selectedTaskList={this.state.selectedTaskList}
-            setSelectedTaskList={this.setSelectedTaskList}
-            tasks={this.state.tasks}
-            selectedTask={this.state.selectedTask}
-          />
-        </div>
+        <BaseLayout 
+          showTaskLists = {this.state.showTaskLists}
+          setShowTaskLists = {this.setShowTaskLists}
+          setShowTaskListDialog = {this.setShowTaskListDialog}
+          setShowTaskDialog = {this.setShowTaskDialog}
+          taskLists = {this.state.taskLists}
+          selectedTaskList={this.state.selectedTaskList}
+          setSelectedTaskList={this.setSelectedTaskList}
+          tasks={this.state.tasks}
+          selectedTask={this.state.selectedTask}
+        />
+
+        <TaskDialog 
+          open={this.state.showTaskDialog}
+          setOpen = {this.setShowTaskDialog}
+          task={this.state.dialogTask}
+          setTask={this.setDialogTask}
+          submitTask={this.submitTaskDialog}
+        />
 
         <TaskListDialog 
           open={this.state.showTaskListDialog}
