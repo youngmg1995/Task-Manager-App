@@ -26,22 +26,6 @@ import { ITask } from "../Tasks";
 
 const useStyles: any = makeStyles(() => ({
   root: {
-    width: "100%",
-    height: "100%",
-    display: "grid",
-    gridTemplateColumns: "1fr",
-    gridTemplateRows: "auto 1fr",
-  },
-  toolbarContainer: {
-    gridColumn: "1/2",
-    gridRow: "1/2",
-  },
-  taskListContainer: {
-    gridColumn: "1/2",
-    gridRow: "2/3",
-    overflow: "hidden",
-  },
-  taskList: {
     maxHeight: "100%",
     overflow: "auto",
   }
@@ -58,7 +42,7 @@ type Props = {
 };
 
 // actual component
-const TasksUI: React.FC<Props> = (props) => {
+const TaskListView: React.FC<Props> = (props) => {
   
   const { tasks } = props;
 
@@ -66,31 +50,21 @@ const TasksUI: React.FC<Props> = (props) => {
 
   return (
 
-    <div className={classes.root}>
-
-      <div className={classes.toolbarContainer}>
-        toolbar
-      </div>
-
-      <div className={classes.taskListContainer}>
-        <List className={classes.taskList}>
-          {tasks.map((inTask) => (
-            <ListItem key={inTask._id} divider>
-              <ListItemIcon>
-                <Checkbox/>
-              </ListItemIcon>
-              <ListItemText primary={inTask.title} />
-              <ListItemSecondaryAction>
-                <IconButton>
-                  <WhatshotIcon />
-                </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>
-          ))}
-        </List>
-      </div>
-
-    </div>
+    <List className={classes.root}>
+      {tasks.map((inTask) => (
+        <ListItem key={inTask._id} divider>
+          <ListItemIcon>
+            <Checkbox/>
+          </ListItemIcon>
+          <ListItemText primary={inTask.title} />
+          <ListItemSecondaryAction>
+            <IconButton>
+              <WhatshotIcon />
+            </IconButton>
+          </ListItemSecondaryAction>
+        </ListItem>
+      ))}
+    </List>
 
   );
 };
@@ -100,7 +74,7 @@ const TasksUI: React.FC<Props> = (props) => {
 // ----------------------------------------------------------------------- Exports ------------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-export default TasksUI;
+export default TaskListView;
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------

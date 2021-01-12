@@ -14,7 +14,7 @@ import React from "react";
 import { ITask } from "../Tasks";
 import { ITaskList } from "../TaskLists";
 import TaskListsDrawer from "./TaskListsDrawer";
-import TasksUI from "./TasksUI";
+import TaskListView from "./TaskListView";
 import ToDoAppBar from "./ToDoAppBar";
 
 
@@ -51,9 +51,28 @@ const useStyles: any = makeStyles(() => ({
     gridRow: "1/2",
     overflow: "hidden",
   },
-  tasksContainer: {
+  tasksInterface: {
     gridColumn: "2/3",
     gridRow: "1/1",
+    overflow: "hidden",
+    display: "grid",
+    gridTemplateColumns: "1fr",
+    gridTemplateRows: "auto 1fr",
+  },
+  // root: {
+  //   width: "100%",
+  //   height: "100%",
+  //   display: "grid",
+  //   gridTemplateColumns: "1fr",
+  //   gridTemplateRows: "auto 1fr",
+  // },
+  toolbarContainer: {
+    gridColumn: "1/2",
+    gridRow: "1/2",
+  },
+  viewContainer: {
+    gridColumn: "1/2",
+    gridRow: "2/3",
     overflow: "hidden",
   },
 }));
@@ -134,8 +153,16 @@ const BaseLayout: React.FC<Props> = (props) => {
             </div>
           </Hidden>
 
-          <div className={classes.tasksContainer}>
-            <TasksUI tasks={tasks}/>
+          <div className={classes.tasksInterface}>
+
+            <div className={classes.toolbarContainer}>
+              toolbar
+            </div>
+
+            <div className={classes.viewContainer}>
+              <TaskListView tasks={tasks}/>
+            </div>
+
           </div>
 
         </div>
