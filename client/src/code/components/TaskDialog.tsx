@@ -17,6 +17,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 // local imports
 import { ITask } from "../Tasks";
+import { ITaskList } from "../TaskLists";
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -40,6 +41,7 @@ type Props = {
   task: ITask,
   setTask: (inTask?: ITask) => void,
   submitTask: () => Promise<void>,
+  taskLists: ITaskList[],
 };
 
 // actual component
@@ -51,6 +53,7 @@ const TaskDialog: React.FC<Props> = (props) => {
     task,
     setTask,
     submitTask,
+    taskLists,
   } = props;
 
   function handleClose(): void {
@@ -62,7 +65,7 @@ const TaskDialog: React.FC<Props> = (props) => {
     const newTask: ITask = Object.assign(
       {}, 
       task,
-      { [event.target.id]: event.target.value }
+      { [event.target.name]: event.target.value }
     );
     setTask(newTask);
   }
@@ -84,7 +87,7 @@ const TaskDialog: React.FC<Props> = (props) => {
     >
 
       <DialogTitle id="form-dialog-title">
-        New Task List
+        New Task
       </DialogTitle>
 
       <DialogContent>
@@ -92,19 +95,37 @@ const TaskDialog: React.FC<Props> = (props) => {
           {/* title */}
           <TextField
             autoFocus
+            required
             margin="dense"
-            id="title"
             label="Title"
             fullWidth
+            name="title"
             value={task.title}
             onChange={handleFormChange}
           />
+          {/* task list */}
+          <TextField
+            select
+            margin="dense"
+            label="Task List"
+            fullWidth
+            name="taskList"
+            value={task.taskList}
+            onChange={handleFormChange}
+          >
+            {taskLists.map((inTaskList) => (
+              <option key={inTaskList._id} value={inTaskList._id}>
+                {inTaskList.title}
+              </option>
+            ))}
+          </TextField>
           {/* description */}
           <TextField
+            required
             margin="dense"
-            id="description"
             label="Description"
             fullWidth
+            name="description"
             value={task.description}
             onChange={handleFormChange}
           />

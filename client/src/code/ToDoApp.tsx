@@ -249,6 +249,7 @@ export default class ToDoApp extends React.Component<Props, State> {
           task={this.state.dialogTask}
           setTask={this.setDialogTask}
           submitTask={this.submitTaskDialog}
+          taskLists={this.state.taskLists}
         />
 
         <TaskListDialog 
