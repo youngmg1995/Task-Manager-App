@@ -11,6 +11,7 @@ import {
     DialogContent,
     // DialogContentText,
     DialogTitle,
+    MenuItem,
     TextField,
 } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
@@ -114,9 +115,9 @@ const TaskDialog: React.FC<Props> = (props) => {
             onChange={handleFormChange}
           >
             {taskLists.map((inTaskList) => (
-              <option key={inTaskList._id} value={inTaskList._id}>
+              <MenuItem key={inTaskList._id} value={inTaskList._id}>
                 {inTaskList.title}
-              </option>
+              </MenuItem>
             ))}
           </TextField>
           {/* description */}
