@@ -63,11 +63,26 @@ const TaskDialog: React.FC<Props> = (props) => {
   }
 
   function handleFormChange(event: any): void {
-    const newTask: ITask = Object.assign(
-      {}, 
-      task,
-      { [event.target.name]: event.target.value }
-    );
+    // grab task field name and value
+    const fieldName: keyof ITask = event.target.name;
+    const value: any = event.target.value;
+
+    // initiate variable for storing altered task
+    let newTask: ITask = Object.assign( {}, task);
+
+    // remove field from task if value set to undefined
+    if (event.target.value === undefined) {
+      delete newTask[fieldName];
+    }
+    // else reassign value of field 
+    else {
+      Object.assign(
+        newTask,
+        { [fieldName]: value }
+      );
+    }
+
+    // save changes
     setTask(newTask);
   }
 
@@ -114,6 +129,9 @@ const TaskDialog: React.FC<Props> = (props) => {
             value={task.taskList}
             onChange={handleFormChange}
           >
+            <MenuItem value={undefined}>
+              <em>None</em>
+            </MenuItem>
             {taskLists.map((inTaskList) => (
               <MenuItem key={inTaskList._id} value={inTaskList._id}>
                 {inTaskList.title}
