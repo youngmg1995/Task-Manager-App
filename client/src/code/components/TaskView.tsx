@@ -5,16 +5,9 @@
 // node modules
 import React from "react";
 import {
-  Checkbox,
-  IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemSecondaryAction,
-  ListItemText,
+  Typography,
 } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
-import WhatshotIcon from '@material-ui/icons/Whatshot';
 
 // local imports
 import { ITask } from "../Tasks";
@@ -26,8 +19,6 @@ import { ITask } from "../Tasks";
 
 const useStyles: any = makeStyles(() => ({
   root: {
-    maxHeight: "100%",
-    overflow: "auto",
   }
 }));
 
@@ -38,37 +29,26 @@ const useStyles: any = makeStyles(() => ({
 
 // props and state types
 type Props = {
-  tasks: ITask[],
-  setSelectedTask: (inTask: ITask | null) => void;
+  task: ITask,
 };
 
 // actual component
-const TaskListView: React.FC<Props> = (props) => {
+const TaskView: React.FC<Props> = (props) => {
   
-  const { 
-    tasks,
-    setSelectedTask,
-  } = props;
+  const { task } = props;
 
   const classes = useStyles();
 
   return (
 
-    <List className={classes.root}>
-      {tasks.map((inTask) => (
-        <ListItem key={inTask._id} button disableRipple divider onClick={() => setSelectedTask(inTask)}>
-          <ListItemIcon>
-            <Checkbox/>
-          </ListItemIcon>
-          <ListItemText primary={inTask.title} />
-          <ListItemSecondaryAction>
-            <IconButton>
-              <WhatshotIcon />
-            </IconButton>
-          </ListItemSecondaryAction>
-        </ListItem>
-      ))}
-    </List>
+    <div className={classes.root}>
+      <Typography variant="h6">
+        {task.title}
+      </Typography>
+      <Typography>
+        {task.description}
+      </Typography>
+    </div>
 
   );
 };
@@ -78,7 +58,7 @@ const TaskListView: React.FC<Props> = (props) => {
 // ----------------------------------------------------------------------- Exports ------------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-export default TaskListView;
+export default TaskView;
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------

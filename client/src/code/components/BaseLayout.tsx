@@ -15,6 +15,7 @@ import { ITask } from "../Tasks";
 import { ITaskList } from "../TaskLists";
 import TaskListsDrawer from "./TaskListsDrawer";
 import TaskListView from "./TaskListView";
+import TaskView from "./TaskView";
 import ToDoAppBar from "./ToDoAppBar";
 
 
@@ -59,13 +60,6 @@ const useStyles: any = makeStyles(() => ({
     gridTemplateColumns: "1fr",
     gridTemplateRows: "auto 1fr",
   },
-  // root: {
-  //   width: "100%",
-  //   height: "100%",
-  //   display: "grid",
-  //   gridTemplateColumns: "1fr",
-  //   gridTemplateRows: "auto 1fr",
-  // },
   toolbarContainer: {
     gridColumn: "1/2",
     gridRow: "1/2",
@@ -93,6 +87,8 @@ type Props = {
   setSelectedTaskList: (inTaskList: ITaskList | null) => Promise<void>;
   tasks: ITask[],
   selectedTask: ITask | null,
+  setSelectedTask: (inTask: ITask | null) => void;
+  currentView: string,
 };
 
 // actual component
@@ -107,12 +103,14 @@ const BaseLayout: React.FC<Props> = (props) => {
     selectedTaskList,
     setSelectedTaskList,
     tasks,  
-    // selectedTask,
+    selectedTask,
+    setSelectedTask,
+    currentView,
   } = props;
 
   const classes = useStyles();
 
-  const drawer = (
+  const drawer: React.ReactElement = (
     <TaskListsDrawer 
       taskLists={taskLists}
       selectedTaskList={selectedTaskList}
@@ -120,6 +118,15 @@ const BaseLayout: React.FC<Props> = (props) => {
       setShowTaskListDialog={setShowTaskListDialog}
     />
   );
+
+  let view: React.ReactElement;
+  if (currentView === "task-list-view") {
+    view = <TaskListView tasks={tasks} setSelectedTask={setSelectedTask} />;
+  } else if (currentView === "task-view" && selectedTask) {
+    view = <TaskView task={selectedTask}/>
+  } else {
+    view = <TaskListView tasks={tasks} setSelectedTask={setSelectedTask} />;
+  }
 
   return (
     
@@ -160,7 +167,7 @@ const BaseLayout: React.FC<Props> = (props) => {
             </div>
 
             <div className={classes.viewContainer}>
-              <TaskListView tasks={tasks}/>
+              {view}
             </div>
 
           </div>

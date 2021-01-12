@@ -37,6 +37,7 @@ type State = {
   selectedTaskList: ITaskList | null,
   tasks: ITask[],
   selectedTask: ITask | null,
+  currentView: string,
 };
 
 // actual component
@@ -60,6 +61,7 @@ export default class ToDoApp extends React.Component<Props, State> {
       selectedTaskList: null,
       tasks: [],
       selectedTask: null,
+      currentView: "task-list-view",
     };
 
     // for toggling loading screen
@@ -77,6 +79,12 @@ export default class ToDoApp extends React.Component<Props, State> {
     this.setShowTaskDialog = this.setShowTaskDialog.bind(this);
     this.setDialogTask = this.setDialogTask.bind(this);
     this.submitTaskDialog = this.submitTaskDialog.bind(this);
+
+    // for selecting specific tasks to view
+    this.setSelectedTask = this.setSelectedTask.bind(this);
+
+    // for changing the view (user inferface) seen by the user
+    this.setCurrentView = this.setCurrentView.bind(this);
 
     // other functionalities ( Ex: switching between selected task lists and tasks to view)
     this.addTaskList = this.addTaskList.bind(this);
@@ -166,6 +174,61 @@ export default class ToDoApp extends React.Component<Props, State> {
 
   };
 
+  async setSelectedTaskList(inTaskList: ITaskList | null, isInit: boolean = false): Promise<void> {
+
+    // if we are not initializing the App and the task list was not changed, then we don't need to grab any 
+    // new tasks, so just set the currentView to "task-list-view" and selectedTask to null
+    if (!isInit && (
+      (inTaskList === null && this.state.selectedTaskList === null)
+      ||
+      (inTaskList !== null && this.state.selectedTaskList !== null && this.state.selectedTaskList._id === inTaskList._id)
+    )) {
+      this.setState({
+        currentView: "task-list-view",
+        selectedTask: null,
+      });
+    // else we need to grab some new tasks
+    } else {
+
+      // initiate list for tasks
+      let tasks: any[];
+
+      // if we are initializing the App of if task list has been changed to null then grab all tasks
+      if (isInit || inTaskList === null) {
+        const worker: Tasks.Worker = new Tasks.Worker();
+        tasks = await worker.listTasks();
+      // else only grab the tasks for the specified task list
+      } else {
+        const worker: TaskLists.Worker = new TaskLists.Worker();
+        tasks = await worker.getTaskListTasks(String(inTaskList._id));
+      }
+  
+      // update state with new tasks, new task list, and set currentView to "task-list-view"
+      this.setState({
+        selectedTaskList: inTaskList,
+        tasks: tasks,
+        currentView: "task-list-view",
+        selectedTask: null,
+      });
+
+    }
+  }
+
+  setSelectedTask(inTask: ITask | null): void {
+    this.setState({
+      currentView: "task-view",
+      selectedTask: inTask,
+    });
+  }
+
+  setCurrentView(inView: string): void {
+    if (inView !== this.state.currentView) {
+      this.setState({
+        currentView: inView,
+      });
+    }
+  }
+
   addTaskList(inTaskList: ITaskList): void {
     const newTaskLists: ITaskList[] = this.state.taskLists.concat(inTaskList);
     this.setState({
@@ -178,32 +241,6 @@ export default class ToDoApp extends React.Component<Props, State> {
     this.setState({
       tasks: newTasks,
     })
-  }
-
-  async setSelectedTaskList(inTaskList: ITaskList | null, isInit: boolean = false): Promise<void> {
-    if (inTaskList === null) {
-      if (this.state.selectedTaskList !== null || isInit) {
-        console.log("Setting new task list to null")
-        const worker: Tasks.Worker = new Tasks.Worker();
-        const tasks: any[] = await worker.listTasks();
-        this.setState({
-          selectedTaskList: inTaskList,
-          tasks: tasks,
-        });
-      } 
-    } else {
-      if (this.state.selectedTaskList === null 
-        || (this.state.selectedTaskList !== null && this.state.selectedTaskList._id !== inTaskList._id)
-      ) {
-        console.log("Setting new task list")
-        const worker: TaskLists.Worker = new TaskLists.Worker();
-        const tasks: any[] = await worker.getTaskListTasks(String(inTaskList._id));
-        this.setState({
-          selectedTaskList: inTaskList,
-          tasks: tasks,
-        });
-      }
-    }
   }
 
   // This might not be working properly
@@ -241,6 +278,8 @@ export default class ToDoApp extends React.Component<Props, State> {
           setSelectedTaskList={this.setSelectedTaskList}
           tasks={this.state.tasks}
           selectedTask={this.state.selectedTask}
+          setSelectedTask={this.setSelectedTask}
+          currentView={this.state.currentView}
         />
 
         <TaskDialog 
