@@ -63,6 +63,7 @@ const TaskDialog: React.FC<Props> = (props) => {
   }
 
   function handleFormChange(event: any): void {
+
     // grab task field name and value
     const fieldName: keyof ITask = event.target.name;
     const value: any = event.target.value;
@@ -84,6 +85,7 @@ const TaskDialog: React.FC<Props> = (props) => {
 
     // save changes
     setTask(newTask);
+
   }
 
   function handleSubmit(): void {
@@ -144,6 +146,7 @@ const TaskDialog: React.FC<Props> = (props) => {
             margin="dense"
             label="Description"
             fullWidth
+            multiline
             name="description"
             value={task.description}
             onChange={handleFormChange}
