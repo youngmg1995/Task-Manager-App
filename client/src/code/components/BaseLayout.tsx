@@ -14,7 +14,7 @@ import React from "react";
 import { ITask } from "../Tasks";
 import { ITaskList } from "../TaskLists";
 import TaskListsDrawer from "./TaskListsDrawer";
-import TaskListUI from "./TaskListUI";
+import TasksUI from "./TasksUI";
 import ToDoAppBar from "./ToDoAppBar";
 
 
@@ -135,7 +135,7 @@ const BaseLayout: React.FC<Props> = (props) => {
           </Hidden>
 
           <div className={classes.tasksContainer}>
-            <TaskListUI tasks={tasks}/>
+            <TasksUI tasks={tasks}/>
           </div>
 
         </div>
