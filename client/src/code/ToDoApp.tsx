@@ -36,7 +36,7 @@ type State = {
   taskLists: ITaskList[],
   selectedTaskList: ITaskList | null,
   tasks: ITask[],
-  selectedTask: ITask | null,
+  selectedTask: number | null,
   currentView: string,
 };
 
@@ -152,10 +152,24 @@ export default class ToDoApp extends React.Component<Props, State> {
 
     const worker: Tasks.Worker = new Tasks.Worker();
 
-    // for editing existing task list
-    if (this.state.dialogTaskList._id) {
+    // for editing existing task
+    // currently loops over tasks and replaces task with same id (could probably set it up to use an index)
+    if (this.state.dialogTask._id) {
+      const newTask: ITask = await worker.editTask(this.state.dialogTask._id, this.state.dialogTask);
+      // set the new list of tasks
+      this.setState(state => {
+        const newTasks: ITask[] = state.tasks;
+        for (let i: number = 0; i < newTasks.length; i++) {
+          if (newTask._id === newTasks[i]._id) newTasks[i] = newTask;
+        }
+        return {
+          tasks: newTasks,
+          showTaskDialog: false,
+          dialogTask: { title: "", description: "", },
+        };
+      });
     }
-    // for creating and adding new task list
+    // for creating and adding new task
     else {
       const newTask: ITask = await worker.createTask(this.state.dialogTask);
       if (this.state.selectedTaskList === null || newTask.taskList === this.state.selectedTaskList?._id) {
@@ -214,10 +228,10 @@ export default class ToDoApp extends React.Component<Props, State> {
     }
   }
 
-  setSelectedTask(inTask: ITask | null): void {
+  setSelectedTask(inIndex: number | null): void {
     this.setState({
       currentView: "task-view",
-      selectedTask: inTask,
+      selectedTask: inIndex,
     });
   }
 
@@ -273,6 +287,7 @@ export default class ToDoApp extends React.Component<Props, State> {
           setShowTaskLists = {this.setShowTaskLists}
           setShowTaskListDialog = {this.setShowTaskListDialog}
           setShowTaskDialog = {this.setShowTaskDialog}
+          setDialogTask={this.setDialogTask}
           taskLists = {this.state.taskLists}
           selectedTaskList={this.state.selectedTaskList}
           setSelectedTaskList={this.setSelectedTaskList}

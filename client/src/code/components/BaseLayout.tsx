@@ -82,12 +82,13 @@ type Props = {
   setShowTaskLists: (inVisible: boolean) => void;
   setShowTaskListDialog: (inVisible: boolean) => void;
   setShowTaskDialog: (inVisible: boolean) => void;
+  setDialogTask: (inTask?: ITask) => void;
   taskLists: ITaskList[],
   selectedTaskList: ITaskList | null,
-  setSelectedTaskList: (inTaskList: ITaskList | null) => Promise<void>;
+  setSelectedTaskList: (inTaskList: ITaskList | null) => Promise<void>,
   tasks: ITask[],
-  selectedTask: ITask | null,
-  setSelectedTask: (inTask: ITask | null) => void;
+  selectedTask: number | null,
+  setSelectedTask: (inIndex: number | null) => void,
   currentView: string,
 };
 
@@ -99,6 +100,7 @@ const BaseLayout: React.FC<Props> = (props) => {
     setShowTaskLists, 
     setShowTaskListDialog,
     setShowTaskDialog,
+    setDialogTask,
     taskLists, 
     selectedTaskList,
     setSelectedTaskList,
@@ -121,11 +123,25 @@ const BaseLayout: React.FC<Props> = (props) => {
 
   let view: React.ReactElement;
   if (currentView === "task-list-view") {
-    view = <TaskListView tasks={tasks} setSelectedTask={setSelectedTask} />;
+    view = (
+      <TaskListView 
+        tasks={tasks} 
+        setSelectedTask={setSelectedTask}
+        setShowTaskDialog={setShowTaskDialog}
+        setDialogTask={setDialogTask}
+      />
+    );
   } else if (currentView === "task-view" && selectedTask) {
-    view = <TaskView task={selectedTask}/>
+    view = <TaskView task={tasks[selectedTask]}/>
   } else {
-    view = <TaskListView tasks={tasks} setSelectedTask={setSelectedTask} />;
+    view = (
+      <TaskListView 
+        tasks={tasks} 
+        setSelectedTask={setSelectedTask}
+        setShowTaskDialog={setShowTaskDialog}
+        setDialogTask={setDialogTask}
+      />
+    );
   }
 
   return (

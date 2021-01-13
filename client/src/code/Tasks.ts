@@ -40,7 +40,7 @@ export class Worker {
   }
 
   // get specific tasks
-  public async getTask(inID: string): Promise<ITask> {
+  public async getTask(inID: number): Promise<ITask> {
     console.log("Client - GET /tasks/:id", inID);
     const response: AxiosResponse = await axios.get(
       `${this.serverAddress}/tasks/${inID}`
@@ -61,7 +61,7 @@ export class Worker {
   }
 
   // edit existing task
-  public async editTask(inID: string, inTask: ITask): Promise<ITask> {
+  public async editTask(inID: number, inTask: ITask): Promise<ITask> {
     console.log("Client - PUT /tasks", inID, inTask);
     const response: AxiosResponse = await axios.put(
       `${this.serverAddress}/tasks/${inID}`,
@@ -72,7 +72,7 @@ export class Worker {
   }
 
   // delete existing task
-  public async deleteTask(inID: string): Promise<void> {
+  public async deleteTask(inID: number): Promise<void> {
     console.log("Client - DELETE /tasks/:id", inID);
     const response: AxiosResponse = await axios.delete(
       `${this.serverAddress}/tasks/${inID}`

@@ -5,30 +5,25 @@
 // node modules
 import React from "react";
 import {
-  Checkbox,
-  IconButton,
   List,
-  ListItem,
-  ListItemIcon,
-  ListItemSecondaryAction,
-  ListItemText,
 } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
-import WhatshotIcon from '@material-ui/icons/Whatshot';
 
 // local imports
 import { ITask } from "../Tasks";
+import TaskListItem from "./TaskListItem";
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
 // ------------------------------------------------------------------------ Styles ------------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-const useStyles: any = makeStyles(() => ({
+const useStyles: any = makeStyles((theme) => ({
   root: {
     maxHeight: "100%",
     overflow: "auto",
-  }
+    paddingRight: theme.spacing(1),
+  },
 }));
 
 
@@ -39,7 +34,9 @@ const useStyles: any = makeStyles(() => ({
 // props and state types
 type Props = {
   tasks: ITask[],
-  setSelectedTask: (inTask: ITask | null) => void;
+  setSelectedTask: (inIndex: number | null) => void,
+  setShowTaskDialog: (inVisible: boolean) => void;
+  setDialogTask: (inTask?: ITask) => void;
 };
 
 // actual component
@@ -48,6 +45,8 @@ const TaskListView: React.FC<Props> = (props) => {
   const { 
     tasks,
     setSelectedTask,
+    setShowTaskDialog,
+    setDialogTask,
   } = props;
 
   const classes = useStyles();
@@ -55,18 +54,15 @@ const TaskListView: React.FC<Props> = (props) => {
   return (
 
     <List className={classes.root}>
-      {tasks.map((inTask) => (
-        <ListItem key={inTask._id} button disableRipple divider onClick={() => setSelectedTask(inTask)}>
-          <ListItemIcon>
-            <Checkbox/>
-          </ListItemIcon>
-          <ListItemText primary={inTask.title} />
-          <ListItemSecondaryAction>
-            <IconButton>
-              <WhatshotIcon />
-            </IconButton>
-          </ListItemSecondaryAction>
-        </ListItem>
+      {tasks.map((inTask, inIndex) => (
+          <TaskListItem
+            key={inTask._id}
+            index={inIndex}
+            task={inTask}
+            setSelectedTask={setSelectedTask}
+            setShowTaskDialog={setShowTaskDialog}
+            setDialogTask={setDialogTask}
+          />
       ))}
     </List>
 
