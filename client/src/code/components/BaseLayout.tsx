@@ -131,7 +131,7 @@ const BaseLayout: React.FC<Props> = (props) => {
         setDialogTask={setDialogTask}
       />
     );
-  } else if (currentView === "task-view" && selectedTask) {
+  } else if (currentView === "task-view" && selectedTask !== null) {
     view = <TaskView task={tasks[selectedTask]}/>
   } else {
     view = (

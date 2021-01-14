@@ -30,6 +30,11 @@ const useStyles: any = makeStyles((theme) => ({
     padding: `0px ${theme.spacing(2)}px`,
     display: "grid",
     gridTemplateColumns: "auto 1fr auto",
+    boxShadow: "inset 0 -1.5px 0 0 rgba(100,121,143,0.122)",
+    "&:hover": {
+      cursor: "pointer",
+      boxShadow: "inset 1px 0 0 #dadce0, inset -1px 0 0 #dadce0, 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.3)",
+    },
   },
   tooltip: {
     fontSize: 12,
@@ -98,11 +103,7 @@ const TaskListItem: React.FC<Props> = (props) => {
 
   const [isHovered, setIsHovered] = useState<boolean>(false);
 
-  const classes = useStyles(isHovered);
-
-  const boxShadow: string = isHovered
-    ? "inset 1px 0 0 #dadce0, inset -1px 0 0 #dadce0, 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.3)"
-    : "inset 0 -1.5px 0 0 rgba(100,121,143,0.122)";
+  const classes = useStyles();
 
   function handleItemClick(): void {
     setSelectedTask(index);
@@ -117,7 +118,6 @@ const TaskListItem: React.FC<Props> = (props) => {
   return (
 
     <div
-      style={{boxShadow: boxShadow}}
       className={classes.root}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
