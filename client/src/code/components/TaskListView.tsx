@@ -36,6 +36,7 @@ type Props = {
   tasks: ITask[],
   setSelectedTask: (inIndex: number | null) => void,
   setShowTaskDialog: (inVisible: boolean, inTaskID?: number) => void;
+  deleteTask: (inTaskID: number) => Promise<void>;
 };
 
 // actual component
@@ -45,6 +46,7 @@ const TaskListView: React.FC<Props> = (props) => {
     tasks,
     setSelectedTask,
     setShowTaskDialog,
+    deleteTask,
   } = props;
 
   const classes = useStyles();
@@ -59,6 +61,7 @@ const TaskListView: React.FC<Props> = (props) => {
             task={inTask}
             setSelectedTask={setSelectedTask}
             setShowTaskDialog={setShowTaskDialog}
+            deleteTask={deleteTask}
           />
       ))}
     </List>

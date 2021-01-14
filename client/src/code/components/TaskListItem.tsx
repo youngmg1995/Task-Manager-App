@@ -87,6 +87,7 @@ type Props = {
   task: ITask,
   setSelectedTask: (inIndex: number | null) => void,
   setShowTaskDialog: (inVisible: boolean, inTaskID?: number) => void;
+  deleteTask: (inTaskID: number) => Promise<void>;
 };
 
 // actual component
@@ -97,6 +98,7 @@ const TaskListItem: React.FC<Props> = (props) => {
     task,
     setSelectedTask,
     setShowTaskDialog,
+    deleteTask,
   } = props;
 
   const [isHovered, setIsHovered] = useState<boolean>(false);
@@ -110,6 +112,11 @@ const TaskListItem: React.FC<Props> = (props) => {
   function handleEditClick(event: any): void {
     event.stopPropagation();
     setShowTaskDialog(true, task._id);
+  }
+
+  function handleDeleteClick(event: any): void {
+    event.stopPropagation();
+    if (task._id) deleteTask(task._id);
   }
 
   return (
@@ -160,6 +167,7 @@ const TaskListItem: React.FC<Props> = (props) => {
               checked={false}
               icon={<DeleteIcon/>}
               checkedIcon={<DeleteIcon/>}
+              onClick={handleDeleteClick}
             />
           </StyledTooltip>
           {/* Edit */}

@@ -89,6 +89,7 @@ type Props = {
   selectedTask: number | null,
   setSelectedTask: (inIndex: number | null) => void,
   currentView: string,
+  deleteTask: (inTaskID: number) => Promise<void>;
 };
 
 // actual component
@@ -106,6 +107,7 @@ const BaseLayout: React.FC<Props> = (props) => {
     selectedTask,
     setSelectedTask,
     currentView,
+    deleteTask,
   } = props;
 
   const classes = useStyles();
@@ -126,6 +128,7 @@ const BaseLayout: React.FC<Props> = (props) => {
         tasks={tasks} 
         setSelectedTask={setSelectedTask}
         setShowTaskDialog={setShowTaskDialog}
+        deleteTask={deleteTask}
       />
     );
   } else if (currentView === "task-view" && selectedTask !== null) {
@@ -136,6 +139,7 @@ const BaseLayout: React.FC<Props> = (props) => {
         tasks={tasks} 
         setSelectedTask={setSelectedTask}
         setShowTaskDialog={setShowTaskDialog}
+        deleteTask={deleteTask}
       />
     );
   }

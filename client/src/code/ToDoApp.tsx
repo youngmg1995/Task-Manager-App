@@ -95,6 +95,9 @@ export default class ToDoApp extends React.Component<Props, State> {
     this.setDialogTask = this.setDialogTask.bind(this);
     this.submitTaskDialog = this.submitTaskDialog.bind(this);
 
+    // for deleting a task
+    this.deleteTask = this.deleteTask.bind(this);
+
     // for selecting specific tasks to view
     this.setSelectedTask = this.setSelectedTask.bind(this);
 
@@ -254,6 +257,28 @@ export default class ToDoApp extends React.Component<Props, State> {
 
     }
   }
+  
+  async deleteTask(inTaskID: number): Promise<void> {
+
+    // use API to delete task on back-end
+    const worker: Tasks.Worker = new Tasks.Worker();
+    await worker.deleteTask(inTaskID);
+    console.log(inTaskID);
+
+    // remove task from tasks if included (simply loops over tasks and looks for matching id)
+    this.setState(state => {
+      let newTasks: any[] = state.tasks.slice(0);
+      for (let i: number = 0; i < newTasks.length; i++) {
+        if (inTaskID === newTasks[i]._id) {
+          newTasks = newTasks.slice(0,i).concat(newTasks.slice(i+1));
+        }
+      }
+      return {
+        tasks: newTasks,
+      };
+    });
+
+  }
 
   setSelectedTask(inIndex: number | null): void {
     this.setState({
@@ -321,6 +346,7 @@ export default class ToDoApp extends React.Component<Props, State> {
           selectedTask={this.state.selectedTask}
           setSelectedTask={this.setSelectedTask}
           currentView={this.state.currentView}
+          deleteTask={this.deleteTask}
         />
 
         <TaskDialog 

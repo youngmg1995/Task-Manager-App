@@ -199,7 +199,7 @@ app.delete("/tasks/:id",
     console.log("DELETE /tasks ", inRequest.body);
     try {
       const Worker: Tasks.Worker = new Tasks.Worker();
-      await Worker.editTask(inRequest.params.id, inRequest.body);
+      await Worker.deleteTask(inRequest.params.id);
       console.log("DELETE /tasks : OK");
       inResponse.send("Task Deleted");
     } catch (inError) {

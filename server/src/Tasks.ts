@@ -103,13 +103,13 @@ export class Worker {
         {returnUpdatedDocs : true},
         (inError: Error | null, inNumEdited: number, inNewDoc: ITask) => {
           if (inError) {
-            console.log("Tasks.Worker.editTack(): Error", inError);
+            console.log("Tasks.Worker.editTask(): Error", inError);
             inReject({ status: 500, message: "Internal Server Error"});
           } else if (inNumEdited === 0) {
-            console.log("Tasks.Worker.editTack(): Error", "Task Not Found");
+            console.log("Tasks.Worker.editTask(): Error", "Task Not Found");
             inReject({ status: 404, message: "Task Not Found"});
           } else {
-            console.log("Tasks.Worker.editTack(): OK", inNewDoc);
+            console.log("Tasks.Worker.editTask(): OK", inNewDoc);
             inResolve(inNewDoc);
           }
         }
