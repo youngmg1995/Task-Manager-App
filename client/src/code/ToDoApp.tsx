@@ -29,7 +29,9 @@ const defaultTaskList: ITaskList = {
 
 // default task placeholder for creating tasks
 const defaultTask: ITask = { 
-  title: "", 
+  title: "",
+  urgent: false,
+  completed: false,
   description: ""
 };
 
@@ -64,14 +66,9 @@ export default class ToDoApp extends React.Component<Props, State> {
       showLoadingScreen: true,
       showTaskLists: false,
       showTaskListDialog: false,
-      dialogTaskList: {
-        title: "",
-      },
+      dialogTaskList: defaultTaskList,
       showTaskDialog: false,
-      dialogTask: {
-        title: "",
-        description: "",
-      },
+      dialogTask: defaultTask,
       taskLists: [],
       selectedTaskList: null,
       tasks: [],

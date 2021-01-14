@@ -15,6 +15,8 @@ export interface ITask {
   _id?: number,
   title: string,
   taskList?: number,
+  urgent: boolean,
+  completed: boolean,
   description: string,
 }
 

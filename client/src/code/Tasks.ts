@@ -16,19 +16,24 @@ export interface ITask {
   _id?: number,
   title: string,
   taskList?: number,
+  urgent: boolean,
+  completed: boolean,
   dueDate?: string,
   dueTime?: string,
   description: string,
 };
 
 export function filterTask(inTask: ITask): any {
-  return {
-    _id: inTask._id,
-    title: inTask.title,
-    taskList: inTask.taskList,
-    description: inTask.description,
-  };
-};
+  // initiate filtered task as copy of original
+  let outTask: any = Object.assign({},inTask);
+  // delete all the fields we want to omit
+  const omittedFields: string[] = [
+  ];
+  for (const field of omittedFields) {
+    delete outTask[field];
+  }
+  return outTask;
+}
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------

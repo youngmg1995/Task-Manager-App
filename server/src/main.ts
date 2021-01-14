@@ -108,12 +108,7 @@ app.get("/tasklists/:id",
     try {
       const worker: Tasks.Worker = new Tasks.Worker();
       const tasks: ITask[] = await worker.getTaskList(inRequest.params.id);
-      const finalTasks = tasks.map((task) => ({
-        _id: task._id,
-        title: task.title,
-        taskList: task.taskList,
-        description: task.description,
-      }));
+      const finalTasks = filterTasks(tasks);
       console.log("GET /tasklist/:id: OK", finalTasks);
       inResponse.json(finalTasks);
     } catch (inError) {
@@ -130,12 +125,7 @@ app.get("/tasks",
     try {
       const Worker: Tasks.Worker = new Tasks.Worker();
       const tasks: ITask[] = await Worker.listTasks();
-      const finalTasks = tasks.map((task) => ({
-        _id: task._id,
-        title: task.title,
-        taskList: task.taskList,
-        description: task.description,
-      }));
+      const finalTasks = filterTasks(tasks);
       console.log("GET /tasks : OK", finalTasks);
       inResponse.json(finalTasks);
     } catch (inError) {
@@ -208,6 +198,25 @@ app.delete("/tasks/:id",
     }
   }
 );
+
+
+// --------------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------- Helper Functions ---------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------------------------------------------
+
+function filterTasks(inTasks: ITask[]): any[] {
+  return inTasks.map((inTask) => {
+    // initiate filtered task as copy of original
+    let outTask: any = Object.assign({},inTask);
+    // delete all the fields we want to omit
+    const omittedFields: string[] = [
+    ];
+    for (const field of omittedFields) {
+      delete outTask[field];
+    }
+    return outTask;
+  });
+}
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
