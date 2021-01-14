@@ -111,6 +111,7 @@ app.get("/tasklists/:id",
       const finalTasks = tasks.map((task) => ({
         _id: task._id,
         title: task.title,
+        taskList: task.taskList,
         description: task.description,
       }));
       console.log("GET /tasklist/:id: OK", finalTasks);
@@ -132,6 +133,7 @@ app.get("/tasks",
       const finalTasks = tasks.map((task) => ({
         _id: task._id,
         title: task.title,
+        taskList: task.taskList,
         description: task.description,
       }));
       console.log("GET /tasks : OK", finalTasks);

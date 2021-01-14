@@ -57,11 +57,6 @@ const TaskDialog: React.FC<Props> = (props) => {
     taskLists,
   } = props;
 
-  function handleClose(): void {
-    setTask();
-    setOpen(false);
-  }
-
   function handleFormChange(event: any): void {
 
     // grab task field name and value
@@ -88,6 +83,11 @@ const TaskDialog: React.FC<Props> = (props) => {
 
   }
 
+  function handleClose(): void {
+    setTask();
+    setOpen(false);
+  }
+
   function handleSubmit(): void {
     submitTask();
   }
@@ -105,14 +105,14 @@ const TaskDialog: React.FC<Props> = (props) => {
     >
 
       <DialogTitle id="form-dialog-title">
-        New Task
+        {task._id ? "Edit Task" : "Compose Task"}
       </DialogTitle>
 
       <DialogContent>
         <form noValidate autoComplete="off">
           {/* title */}
           <TextField
-            autoFocus
+            autoFocus={!task._id}
             required
             margin="dense"
             label="Title"

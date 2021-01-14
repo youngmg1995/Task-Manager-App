@@ -86,8 +86,7 @@ type Props = {
   index: number,
   task: ITask,
   setSelectedTask: (inIndex: number | null) => void,
-  setShowTaskDialog: (inVisible: boolean) => void;
-  setDialogTask: (inTask?: ITask) => void;
+  setShowTaskDialog: (inVisible: boolean, inTaskID?: number) => void;
 };
 
 // actual component
@@ -98,7 +97,6 @@ const TaskListItem: React.FC<Props> = (props) => {
     task,
     setSelectedTask,
     setShowTaskDialog,
-    setDialogTask,
   } = props;
 
   const [isHovered, setIsHovered] = useState<boolean>(false);
@@ -111,8 +109,7 @@ const TaskListItem: React.FC<Props> = (props) => {
 
   function handleEditClick(event: any): void {
     event.stopPropagation();
-    setDialogTask(task);
-    setShowTaskDialog(true);
+    setShowTaskDialog(true, task._id);
   }
 
   return (

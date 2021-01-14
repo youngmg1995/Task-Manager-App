@@ -81,8 +81,7 @@ type Props = {
   showTaskLists: boolean,
   setShowTaskLists: (inVisible: boolean) => void;
   setShowTaskListDialog: (inVisible: boolean) => void;
-  setShowTaskDialog: (inVisible: boolean) => void;
-  setDialogTask: (inTask?: ITask) => void;
+  setShowTaskDialog: (inVisible: boolean, inTaskID?: number) => void;
   taskLists: ITaskList[],
   selectedTaskList: ITaskList | null,
   setSelectedTaskList: (inTaskList: ITaskList | null) => Promise<void>,
@@ -100,7 +99,6 @@ const BaseLayout: React.FC<Props> = (props) => {
     setShowTaskLists, 
     setShowTaskListDialog,
     setShowTaskDialog,
-    setDialogTask,
     taskLists, 
     selectedTaskList,
     setSelectedTaskList,
@@ -128,7 +126,6 @@ const BaseLayout: React.FC<Props> = (props) => {
         tasks={tasks} 
         setSelectedTask={setSelectedTask}
         setShowTaskDialog={setShowTaskDialog}
-        setDialogTask={setDialogTask}
       />
     );
   } else if (currentView === "task-view" && selectedTask !== null) {
@@ -139,7 +136,6 @@ const BaseLayout: React.FC<Props> = (props) => {
         tasks={tasks} 
         setSelectedTask={setSelectedTask}
         setShowTaskDialog={setShowTaskDialog}
-        setDialogTask={setDialogTask}
       />
     );
   }

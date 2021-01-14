@@ -13,10 +13,25 @@ import {
   TaskListDialog,
 } from "./components";
 import * as Tasks from "./Tasks";
-import { ITask } from "./Tasks";
+import { ITask, filterTask } from "./Tasks";
 import * as TaskLists from "./TaskLists";
 import { ITaskList } from "./TaskLists";
 
+
+// --------------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------- Settings -----------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// default task list  placeholder for creating task lists
+const defaultTaskList: ITaskList = { 
+  title: "",
+};
+
+// default task placeholder for creating tasks
+const defaultTask: ITask = { 
+  title: "", 
+  description: ""
+};
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -35,7 +50,7 @@ type State = {
   dialogTask: ITask,
   taskLists: ITaskList[],
   selectedTaskList: ITaskList | null,
-  tasks: ITask[],
+  tasks: any[],
   selectedTask: number | null,
   currentView: string,
 };
@@ -109,7 +124,7 @@ export default class ToDoApp extends React.Component<Props, State> {
     });
   };
 
-  setDialogTaskList(inTaskList: ITaskList = {title:""}): void {
+  setDialogTaskList(inTaskList: ITaskList = defaultTaskList): void {
     this.setState({
       dialogTaskList: inTaskList,
     });
@@ -129,19 +144,35 @@ export default class ToDoApp extends React.Component<Props, State> {
       this.setState(state => ({
         taskLists: state.taskLists.concat(newTaskList),
         showTaskListDialog: false,
-        dialogTaskList: {title:""},
+        dialogTaskList: defaultTaskList,
       }));
     }
 
   }
 
-  setShowTaskDialog(inVisible: boolean): void {
-    this.setState({
-      showTaskDialog: inVisible,
-    });
+  async setShowTaskDialog(inVisible: boolean, inTaskID?: number): Promise<void> {
+    // if opening the dialog then we need to initiate the task to be viewed
+    if (inVisible === true) {
+      let dialogTask: ITask;
+      if (inTaskID) {
+        const worker: Tasks.Worker = new Tasks.Worker();
+        dialogTask = await worker.getTask(inTaskID);
+      } else {
+        dialogTask = defaultTask;
+      }
+      this.setState({
+        showTaskDialog: inVisible,
+        dialogTask: dialogTask,
+      })
+    // else just close it
+    } else {
+      this.setState({
+        showTaskDialog: inVisible,
+      });
+    }
   };
 
-  setDialogTask(inTask: ITask = { title: "", description: "", } ): void {
+  setDialogTask(inTask: ITask = defaultTask ): void {
     this.setState({
       dialogTask: inTask,
     });
@@ -156,35 +187,31 @@ export default class ToDoApp extends React.Component<Props, State> {
     // currently loops over tasks and replaces task with same id (could probably set it up to use an index)
     if (this.state.dialogTask._id) {
       const newTask: ITask = await worker.editTask(this.state.dialogTask._id, this.state.dialogTask);
+      const filteredTask: any = filterTask(newTask);
       // set the new list of tasks
       this.setState(state => {
-        const newTasks: ITask[] = state.tasks;
+        const newTasks: any[] = state.tasks;
         for (let i: number = 0; i < newTasks.length; i++) {
-          if (newTask._id === newTasks[i]._id) newTasks[i] = newTask;
+          if (filteredTask._id === newTasks[i]._id) newTasks[i] = filteredTask;
         }
         return {
           tasks: newTasks,
-          showTaskDialog: false,
-          dialogTask: { title: "", description: "", },
         };
       });
     }
     // for creating and adding new task
     else {
       const newTask: ITask = await worker.createTask(this.state.dialogTask);
+      const filteredTask: any = filterTask(newTask);
       if (this.state.selectedTaskList === null || newTask.taskList === this.state.selectedTaskList?._id) {
         this.setState(state => ({
-          tasks: [newTask].concat(state.tasks),
-          showTaskDialog: false,
-          dialogTask: { title: "", description: "", },
+          tasks: [filteredTask].concat(state.tasks),
         }));
-      } else {
-        this.setState({
-          showTaskDialog: false,
-          dialogTask: { title: "", description: "", },
-        });
       }
     }
+
+    // close task dialog
+    this.setShowTaskDialog(false);
 
   };
 
@@ -287,7 +314,6 @@ export default class ToDoApp extends React.Component<Props, State> {
           setShowTaskLists = {this.setShowTaskLists}
           setShowTaskListDialog = {this.setShowTaskListDialog}
           setShowTaskDialog = {this.setShowTaskDialog}
-          setDialogTask={this.setDialogTask}
           taskLists = {this.state.taskLists}
           selectedTaskList={this.state.selectedTaskList}
           setSelectedTaskList={this.setSelectedTaskList}

@@ -21,6 +21,15 @@ export interface ITask {
   description: string,
 };
 
+export function filterTask(inTask: ITask): any {
+  return {
+    _id: inTask._id,
+    title: inTask.title,
+    taskList: inTask.taskList,
+    description: inTask.description,
+  };
+};
+
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
 // -------------------------------------------------------------------- Worker Class ----------------------------------------------------------------------
@@ -30,7 +39,7 @@ export class Worker {
   private serverAddress: string = config.serverAddress;
 
   // list tasks
-  public async listTasks(): Promise<ITask[]> {
+  public async listTasks(): Promise<any[]> {
     console.log("Client - GET /tasks");
     const response: AxiosResponse = await axios.get(
       `${this.serverAddress}/tasks`
