@@ -12,6 +12,7 @@ import {
 } from "@material-ui/core";
 import Tooltip, { TooltipProps } from '@material-ui/core/Tooltip';
 import { makeStyles } from '@material-ui/core/styles';
+import CancelIcon from '@material-ui/icons/Cancel';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
@@ -44,16 +45,18 @@ const useStyles: any = makeStyles((theme) => ({
   },
   taskDetails: {
     gridColumn: "2/3",
-    display: "flex",
-    flexDirection: "row",
+    display: "grid",
     alignItems: "center",
+    gridTemplateColumns: `${theme.spacing(1.5)}px ${theme.spacing(24)}px ${theme.spacing(4)}px 1fr`,
     overflow: "hidden",
   },
   taskTitle: {
-    paddingLeft: theme.spacing(2),
+    gridColumn: "2/3",
+    overflow: "hidden",
   },
   taskDescription: {
-
+    gridColumn: "4/5",
+    overflow: "hidden",
   },
   secondaryActions: {
     gridColumn: "3/4"
@@ -88,6 +91,7 @@ type Props = {
   setSelectedTask: (inIndex: number | null) => void,
   setShowTaskDialog: (inVisible: boolean, inTaskID?: number) => void;
   deleteTask: (inTaskID: number) => Promise<void>;
+  editTaskField: (inTaskID: number, inField: string, inValue: any) => Promise<void>;
 };
 
 // actual component
@@ -99,6 +103,7 @@ const TaskListItem: React.FC<Props> = (props) => {
     setSelectedTask,
     setShowTaskDialog,
     deleteTask,
+    editTaskField,
   } = props;
 
   const [isHovered, setIsHovered] = useState<boolean>(false);
@@ -109,14 +114,24 @@ const TaskListItem: React.FC<Props> = (props) => {
     setSelectedTask(index);
   }
 
-  function handleEditClick(event: any): void {
+  function handleUrgentClick(event: any): void {
     event.stopPropagation();
-    setShowTaskDialog(true, task._id);
+    if (task._id) editTaskField(task._id, "urgent", !task.urgent);
+  }
+
+  function handleCompletedClick(event: any): void {
+    event.stopPropagation();
+    if (task._id) editTaskField(task._id, "completed", !task.completed);
   }
 
   function handleDeleteClick(event: any): void {
     event.stopPropagation();
     if (task._id) deleteTask(task._id);
+  }
+
+  function handleEditClick(event: any): void {
+    event.stopPropagation();
+    setShowTaskDialog(true, task._id);
   }
 
   return (
@@ -134,19 +149,24 @@ const TaskListItem: React.FC<Props> = (props) => {
         <StyledTooltip title="Select">
           <Checkbox />
         </StyledTooltip>
-        {/* fire icon (like starring or flagging an email) */}
-        <StyledTooltip title="Mark Urgent">
+        {/* Mark Urgent */}
+        <StyledTooltip title={task.urgent ? "Urgent" : "Not Urgent"}>
           <Checkbox
+            checked={task.urgent}
             icon={<WhatshotIcon/>}
-            checkedIcon={<WhatshotIcon color="secondary"/>}
+            checkedIcon={<WhatshotIcon/>}
+            onClick={handleUrgentClick}
           />
         </StyledTooltip>
       </div>
   
       {/* Details of Task */}
       <div className={classes.taskDetails}>
-        <Typography className={classes.taskTitle}>
+        <Typography noWrap style={{textDecoration: task.completed ? "line-through" : "none"}} className={classes.taskTitle}>
           {task.title}
+        </Typography>
+        <Typography noWrap style={{textDecoration: task.completed ? "line-through" : "none"}} className={classes.taskDescription}>
+          {task.description}
         </Typography>
       </div>
 
@@ -154,11 +174,13 @@ const TaskListItem: React.FC<Props> = (props) => {
       {isHovered &&
         <div className={classes.secondaryActions}>
           {/* Mark Complete */}
-          <StyledTooltip title="Mark Complete">
+          <StyledTooltip title={task.completed ? "Mark Incomplete" : "Mark Completed"}>
             <Checkbox
-              checked={false}
+              color="default"
+              checked={task.completed}
               icon={<CheckCircleIcon/>}
-              checkedIcon={<CheckCircleIcon/>}
+              checkedIcon={<CancelIcon color="inherit"/>}
+              onClick={handleCompletedClick}
             />
           </StyledTooltip>
           {/* Delete */}

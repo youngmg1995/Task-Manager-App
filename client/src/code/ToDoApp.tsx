@@ -92,6 +92,9 @@ export default class ToDoApp extends React.Component<Props, State> {
     this.setDialogTask = this.setDialogTask.bind(this);
     this.submitTaskDialog = this.submitTaskDialog.bind(this);
 
+    // for editing a specific field of a task
+    this.editTaskField = this.editTaskField.bind(this);
+
     // for deleting a task
     this.deleteTask = this.deleteTask.bind(this);
 
@@ -277,6 +280,25 @@ export default class ToDoApp extends React.Component<Props, State> {
 
   }
 
+  async editTaskField(inTaskID: number, inField: string, inValue: any): Promise<void> {
+    // edit task on back-end using API
+    const worker: Tasks.Worker = new Tasks.Worker();
+    const editedTask: ITask = await worker.editTaskField(inTaskID, inField, inValue);
+
+    // replace old task with new one in tasks (just looks through array and searches for matching id)
+    this.setState(state => {
+      let editedTasks: any[] = state.tasks.slice(0);
+      for (let i: number = 0; i < editedTasks.length; i++) {
+        if (editedTask._id === editedTasks[i]._id) {
+          editedTasks[i] = filterTask(editedTask);
+        }
+      }
+      return {
+        tasks: editedTasks,
+      };
+    });
+  }
+
   setSelectedTask(inIndex: number | null): void {
     this.setState({
       currentView: "task-view",
@@ -344,6 +366,7 @@ export default class ToDoApp extends React.Component<Props, State> {
           setSelectedTask={this.setSelectedTask}
           currentView={this.state.currentView}
           deleteTask={this.deleteTask}
+          editTaskField={this.editTaskField}
         />
 
         <TaskDialog 

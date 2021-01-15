@@ -167,7 +167,7 @@ app.post("/tasks",
   }
 );
 
-// edit existing task
+// edit existing task by replacing with entirely new task
 app.put("/tasks/:id",
   async (inRequest: Request, inResponse: Response) => {
     console.log("PUT /tasks ", inRequest.params.id, inRequest.body);
@@ -178,6 +178,22 @@ app.put("/tasks/:id",
       inResponse.json(task);
     } catch (inError) {
       console.log("PUT /tasks : Error", inError);
+      inResponse.status(inError.status).send(inError.message);
+    }
+  }
+);
+
+// edit specific field of existing task by replacing with new value
+app.put("/tasks/:id/:field",
+  async (inRequest: Request, inResponse: Response) => {
+    console.log(`PUT /tasks/${inRequest.params.id}/${inRequest.params.field}`, inRequest.body);
+    try {
+      const Worker: Tasks.Worker = new Tasks.Worker();
+      const task: ITask = await Worker.editTaskField(inRequest.params.id, inRequest.params.field, inRequest.body.value);
+      console.log(`PUT /tasks/${inRequest.params.id}/${inRequest.params.field} : OK`, task);
+      inResponse.json(task);
+    } catch (inError) {
+      console.log(`PUT /tasks/${inRequest.params.id}/${inRequest.params.field}`, inError);
       inResponse.status(inError.status).send(inError.message);
     }
   }

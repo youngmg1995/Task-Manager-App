@@ -96,7 +96,7 @@ export class Worker {
     });
   };
 
-  // edit existing task
+  // edit existing task using an entirely new task
   public editTask(inID: string, inTask: ITask): Promise<ITask> {
     return new Promise((inResolve, inReject) => {
       this.db.update(
@@ -112,6 +112,29 @@ export class Worker {
             inReject({ status: 404, message: "Task Not Found"});
           } else {
             console.log("Tasks.Worker.editTask(): OK", inNewDoc);
+            inResolve(inNewDoc);
+          }
+        }
+      );
+    });
+  };
+
+  // edit single field in existing task by setting to new value
+  public editTaskField(inID: string, inField: string, inValue: any): Promise<ITask> {
+    return new Promise((inResolve, inReject) => {
+      this.db.update(
+        { _id: inID },
+        { $set: {[inField]: inValue}},
+        {returnUpdatedDocs : true},
+        (inError: Error | null, inNumEdited: number, inNewDoc: ITask) => {
+          if (inError) {
+            console.log("Tasks.Worker.editTaskField(): Error", inError);
+            inReject({ status: 500, message: "Internal Server Error"});
+          } else if (inNumEdited === 0) {
+            console.log("Tasks.Worker.editTaskField(): Error", "Task Not Found");
+            inReject({ status: 404, message: "Task Not Found"});
+          } else {
+            console.log("Tasks.Worker.editTaskField(): OK", inNewDoc);
             inResolve(inNewDoc);
           }
         }

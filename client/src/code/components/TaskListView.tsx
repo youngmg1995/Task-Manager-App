@@ -37,6 +37,7 @@ type Props = {
   setSelectedTask: (inIndex: number | null) => void,
   setShowTaskDialog: (inVisible: boolean, inTaskID?: number) => void;
   deleteTask: (inTaskID: number) => Promise<void>;
+  editTaskField: (inTaskID: number, inField: string, inValue: any) => Promise<void>;
 };
 
 // actual component
@@ -47,6 +48,7 @@ const TaskListView: React.FC<Props> = (props) => {
     setSelectedTask,
     setShowTaskDialog,
     deleteTask,
+    editTaskField,
   } = props;
 
   const classes = useStyles();
@@ -62,6 +64,7 @@ const TaskListView: React.FC<Props> = (props) => {
             setSelectedTask={setSelectedTask}
             setShowTaskDialog={setShowTaskDialog}
             deleteTask={deleteTask}
+            editTaskField={editTaskField}
           />
       ))}
     </List>

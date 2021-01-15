@@ -74,7 +74,7 @@ export class Worker {
     return response.data;
   }
 
-  // edit existing task
+  // edit existing task using completely new task
   public async editTask(inID: number, inTask: ITask): Promise<ITask> {
     console.log("Client - PUT /tasks", inID, inTask);
     const response: AxiosResponse = await axios.put(
@@ -82,6 +82,17 @@ export class Worker {
       inTask,
     );
     console.log("Client - PUT /tasks/:id: response = ", response);
+    return response.data;
+  }
+
+  // edit specific field of existing task using new value
+  public async editTaskField(inID: number, inField: string, inValue: any): Promise<ITask> {
+    console.log(`Client - PUT /tasks/${inID}/${inField}`, inValue);
+    const response: AxiosResponse = await axios.put(
+      `${this.serverAddress}/tasks/${inID}/${inField}`,
+      {value: inValue},
+    );
+    console.log("Client - PUT /tasks/:id/:field: response = ", response);
     return response.data;
   }
 
