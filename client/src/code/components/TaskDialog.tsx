@@ -84,7 +84,6 @@ const TaskDialog: React.FC<Props> = (props) => {
   }
 
   function handleClose(): void {
-    setTask();
     setOpen(false);
   }
 
