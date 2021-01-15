@@ -22,7 +22,7 @@ import { ITaskList } from "../TaskLists";
 // ------------------------------------------------------------------------ Styles ------------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-const useStyles: any = makeStyles(() => ({
+const useStyles: any = makeStyles((theme) => ({
   root: {
     width: 250,
     height: "100%",
@@ -43,16 +43,19 @@ const useStyles: any = makeStyles(() => ({
   },
   composeButton: {
   },
-  taskListsContainer: {
+  listContainer: {
     gridColumn: "1/2",
     gridRow: "2/3",
     overflow: "hidden",
   },
-  taskLists: {
+  list: {
     maxHeight: "100%",
     overflow: "auto",
-    padding: "0",
-  }
+    padding: `0 ${theme.spacing(2)}px 0 0`,
+  },
+  listItem: {
+    borderRadius: `0 100px 100px 0`
+  },
 }));
 
 
@@ -97,27 +100,33 @@ const TaskListsDrawer: React.FC<Props> = (props) => {
         </IconButton>
       </div>
 
-      <div className={classes.taskListsContainer}>
+      <div className={classes.listContainer}>
         <List
+          dense
           component="nav"
-          className={classes.taskLists}
+          className={classes.list}
         >
           <ListItem 
             button
+            disableRipple
             selected={selectedTaskList === null}
             onClick={() => setSelectedTaskList(null)}
+            className={classes.listItem}
+            
           >
-            <ListItemText primary="All Tasks" />
+            <ListItemText primary={selectedTaskList === null ? <b>All Tasks</b> : "All Tasks"} />
           </ListItem>
 
           {taskLists.map((inTaskList) => (
             <ListItem
               key={inTaskList._id} 
               button
+              disableRipple
               selected={selectedTaskList?._id === inTaskList._id}
               onClick={() => setSelectedTaskList(inTaskList)}
+              className={classes.listItem}
             >
-              <ListItemText primary={inTaskList.title} />
+              <ListItemText primary={selectedTaskList?._id === inTaskList._id ? <b>{inTaskList.title}</b> : inTaskList.title} />
             </ListItem>
           ))}
 
