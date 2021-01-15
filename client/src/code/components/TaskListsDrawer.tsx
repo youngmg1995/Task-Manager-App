@@ -6,7 +6,6 @@
 import React from "react";
 import {
   Icon,
-  IconButton,
   List,
   ListItem,
   ListItemIcon,
@@ -14,7 +13,6 @@ import {
   Typography,
 } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 // local imports
 import { ITaskList } from "../TaskLists";
@@ -36,7 +34,7 @@ const useStyles: any = makeStyles((theme) => ({
   headerContainer: {
     gridColumn: "1/2",
     gridRow: "1/2",
-    padding: "8px 8px",
+    padding: theme.spacing(2),
     display: "flex",
     justifyContent: "start",
     alignItems: "center",
@@ -94,12 +92,9 @@ const TaskListsDrawer: React.FC<Props> = (props) => {
     <div className={classes.root}>
 
       <div className={classes.headerContainer}>
-        <Typography variant="h6" className={classes.headerTitle}>
+        <Typography variant="h5" className={classes.headerTitle}>
           Task Lists
         </Typography>
-        <IconButton color="primary" aria-label="compose-taskList" onClick={handleComposeClick} className={classes.composeButton}>
-          <AddCircleIcon fontSize="large"/>
-        </IconButton>
       </div>
 
       <div className={classes.listContainer}>
@@ -107,13 +102,13 @@ const TaskListsDrawer: React.FC<Props> = (props) => {
           component="nav"
           className={classes.list}
         >
+          {/* All Tasks */}
           <ListItem
             button
             disableRipple
             selected={selectedTaskList === null}
             onClick={() => setSelectedTaskList(null)}
             className={classes.listItem}
-            
           >
             <ListItemIcon>
               <Icon>inbox</Icon>
@@ -121,6 +116,7 @@ const TaskListsDrawer: React.FC<Props> = (props) => {
             <ListItemText primary={selectedTaskList === null ? <b>All Tasks</b> : "All Tasks"} />
           </ListItem>
 
+          {/* Custom Task Lists */}
           {taskLists.map((inTaskList) => (
             <ListItem
               key={inTaskList._id} 
@@ -136,6 +132,20 @@ const TaskListsDrawer: React.FC<Props> = (props) => {
               <ListItemText primary={selectedTaskList?._id === inTaskList._id ? <b>{inTaskList.title}</b> : inTaskList.title} />
             </ListItem>
           ))}
+
+          {/* Add Task List */}
+          <ListItem
+            button
+            disableRipple
+            selected={false}
+            onClick={handleComposeClick}
+            className={classes.listItem}
+          >
+            <ListItemIcon>
+              <Icon>add</Icon>
+            </ListItemIcon>
+            <ListItemText primary="Add Task List" />
+          </ListItem>
 
         </List>
       </div>

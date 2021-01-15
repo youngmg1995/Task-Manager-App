@@ -14,6 +14,7 @@ const TaskListIcons: string[] = [
   "report",
   "format_list_bulleted",
   "schedule",
+  "today",
   "hourglass_empty",
   "home",
   "work",

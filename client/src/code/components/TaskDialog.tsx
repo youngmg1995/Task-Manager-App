@@ -123,7 +123,7 @@ const TaskDialog: React.FC<Props> = (props) => {
     >
 
       <DialogTitle id="form-dialog-title">
-        {task._id ? "Edit Task" : "Compose Task"}
+        {task._id ? "Edit Task" : "New Task"}
       </DialogTitle>
 
       <DialogContent>
