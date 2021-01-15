@@ -18,6 +18,7 @@ import Datastore from "nedb";
 export interface ITaskList {
   _id?: number,
   title: string,
+  icon: string,
 }
 
 

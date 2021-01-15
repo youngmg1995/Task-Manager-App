@@ -15,6 +15,7 @@ import { config } from "./config";
 export interface ITaskList {
   _id?: number,
   title: string,
+  icon: string,
 };
 
 

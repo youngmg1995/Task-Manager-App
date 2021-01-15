@@ -5,9 +5,11 @@
 // node modules
 import React from "react";
 import {
+  Icon,
   IconButton,
   List,
   ListItem,
+  ListItemIcon,
   ListItemText,
   Typography,
 } from "@material-ui/core";
@@ -102,11 +104,10 @@ const TaskListsDrawer: React.FC<Props> = (props) => {
 
       <div className={classes.listContainer}>
         <List
-          dense
           component="nav"
           className={classes.list}
         >
-          <ListItem 
+          <ListItem
             button
             disableRipple
             selected={selectedTaskList === null}
@@ -114,6 +115,9 @@ const TaskListsDrawer: React.FC<Props> = (props) => {
             className={classes.listItem}
             
           >
+            <ListItemIcon>
+              <Icon>inbox</Icon>
+            </ListItemIcon>
             <ListItemText primary={selectedTaskList === null ? <b>All Tasks</b> : "All Tasks"} />
           </ListItem>
 
@@ -126,6 +130,9 @@ const TaskListsDrawer: React.FC<Props> = (props) => {
               onClick={() => setSelectedTaskList(inTaskList)}
               className={classes.listItem}
             >
+              <ListItemIcon>
+                <Icon>{inTaskList.icon}</Icon>
+              </ListItemIcon>
               <ListItemText primary={selectedTaskList?._id === inTaskList._id ? <b>{inTaskList.title}</b> : inTaskList.title} />
             </ListItem>
           ))}

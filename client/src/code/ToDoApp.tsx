@@ -25,6 +25,7 @@ import { ITaskList } from "./TaskLists";
 // default task list  placeholder for creating task lists
 const defaultTaskList: ITaskList = { 
   title: "",
+  icon: "label",
 };
 
 // default task placeholder for creating tasks
@@ -162,6 +163,9 @@ export default class ToDoApp extends React.Component<Props, State> {
         dialogTask = await worker.getTask(inTaskID);
       } else {
         dialogTask = defaultTask;
+        if (this.state.selectedTaskList) {
+          Object.assign(dialogTask, {taskList: this.state.selectedTaskList._id});
+        }
       }
       this.setState({
         showTaskDialog: inVisible,

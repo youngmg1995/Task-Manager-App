@@ -30,6 +30,25 @@ const useStyles: any = makeStyles(() => ({
   },
 }));
 
+const taskListSelectProps: any = {
+  MenuProps:{
+    anchorOrigin: {
+      vertical: 'bottom',
+      horizontal: 'left',
+    },
+    transformOrigin: {
+      vertical: 'top',
+      horizontal: 'left',
+    },
+    getContentAnchorEl:null,
+    PaperProps: {
+      style: {
+        maxHeight: 160,
+      },
+    },
+  }
+};
+
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------- Component Definition ------------------------------------------------------------------
@@ -127,6 +146,7 @@ const TaskDialog: React.FC<Props> = (props) => {
             label="Task List"
             fullWidth
             name="taskList"
+            SelectProps={taskListSelectProps}
             value={task.taskList}
             onChange={handleFormChange}
           >

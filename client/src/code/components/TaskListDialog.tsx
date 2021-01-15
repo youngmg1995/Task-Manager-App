@@ -11,12 +11,15 @@ import {
     DialogContent,
     // DialogContentText,
     DialogTitle,
+    Icon,
+    MenuItem,
     TextField,
 } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 
 // local imports
 import { ITaskList } from "../TaskLists";
+import TaskListIcons from "./TaskListIcons";
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -27,6 +30,25 @@ const useStyles: any = makeStyles(() => ({
   root: {
   },
 }));
+
+const iconSelectProps: any = {
+  MenuProps:{
+    anchorOrigin: {
+      vertical: 'bottom',
+      horizontal: 'left',
+    },
+    transformOrigin: {
+      vertical: 'top',
+      horizontal: 'left',
+    },
+    getContentAnchorEl:null,
+    PaperProps: {
+      style: {
+        maxHeight: 160,
+      },
+    },
+  }
+};
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -52,6 +74,7 @@ const TaskListDialog: React.FC<Props> = (props) => {
     setTaskList,
     submitTaskList,
   } = props;
+  console.log(taskList);
 
   function handleClose(): void {
     setTaskList();
@@ -59,12 +82,23 @@ const TaskListDialog: React.FC<Props> = (props) => {
   }
 
   function handleFormChange(event: any): void {
-    const newTaskList: ITaskList = Object.assign(
-      {}, 
-      taskList,
-      { [event.target.id]: event.target.value }
+
+    // grab task list field name and value
+    const fieldName: keyof ITaskList = event.target.name;
+    const value: any = event.target.value;
+
+    // initiate variable for storing altered task list
+    let newTaskList: ITaskList = Object.assign( {}, taskList);
+
+    // reassign value of field 
+    Object.assign(
+      newTaskList,
+      { [fieldName]: value }
     );
+
+    // save changes
     setTaskList(newTaskList);
+
   }
 
   function handleSubmit(): void {
@@ -93,12 +127,29 @@ const TaskListDialog: React.FC<Props> = (props) => {
           <TextField
             autoFocus
             margin="dense"
-            id="title"
+            name="title"
             label="Title"
             fullWidth
             value={taskList.title}
             onChange={handleFormChange}
           />
+          {/* icon */}
+          <TextField
+            select
+            margin="dense"
+            label="Icon"
+            // fullWidth
+            name="icon"
+            SelectProps={iconSelectProps}
+            value={taskList.icon}
+            onChange={handleFormChange}
+          >
+            {TaskListIcons.map((inIcon) => (
+                <MenuItem key={inIcon} value={inIcon}>
+                  <Icon color="primary">{inIcon}</Icon>
+                </MenuItem>
+            ))}
+          </TextField>
         </form>
       </DialogContent>
 
