@@ -47,7 +47,7 @@ const useStyles: any = makeStyles((theme) => ({
     gridColumn: "2/3",
     display: "grid",
     alignItems: "center",
-    gridTemplateColumns: `${theme.spacing(1.5)}px ${theme.spacing(24)}px ${theme.spacing(4)}px 1fr`,
+    gridTemplateColumns: `${theme.spacing(1.5)}px 164px 36px 1fr`,
     overflow: "hidden",
   },
   taskTitle: {
@@ -147,11 +147,12 @@ const TaskListItem: React.FC<Props> = (props) => {
       <div className={classes.primaryActions}>
         {/* checkbox */}
         <StyledTooltip title="Select">
-          <Checkbox />
+          <Checkbox size="small"/>
         </StyledTooltip>
         {/* Mark Urgent */}
         <StyledTooltip title={task.urgent ? "Urgent" : "Not Urgent"}>
           <Checkbox
+            size="small"
             checked={task.urgent}
             icon={<WhatshotIcon/>}
             checkedIcon={<WhatshotIcon/>}
@@ -162,10 +163,10 @@ const TaskListItem: React.FC<Props> = (props) => {
   
       {/* Details of Task */}
       <div className={classes.taskDetails}>
-        <Typography noWrap style={{textDecoration: task.completed ? "line-through" : "none"}} className={classes.taskTitle}>
+        <Typography variant="body2" noWrap style={{textDecoration: task.completed ? "line-through" : "none"}} className={classes.taskTitle}>
           {task.title}
         </Typography>
-        <Typography noWrap style={{textDecoration: task.completed ? "line-through" : "none"}} className={classes.taskDescription}>
+        <Typography variant="body2" noWrap style={{textDecoration: task.completed ? "line-through" : "none"}} className={classes.taskDescription}>
           {task.description}
         </Typography>
       </div>
@@ -176,6 +177,7 @@ const TaskListItem: React.FC<Props> = (props) => {
           {/* Mark Complete */}
           <StyledTooltip title={task.completed ? "Mark Incomplete" : "Mark Completed"}>
             <Checkbox
+              size="small"
               color="default"
               checked={task.completed}
               icon={<CheckCircleIcon/>}
@@ -186,6 +188,7 @@ const TaskListItem: React.FC<Props> = (props) => {
           {/* Delete */}
           <StyledTooltip title="Delete">
             <Checkbox
+              size="small"
               checked={false}
               icon={<DeleteIcon/>}
               checkedIcon={<DeleteIcon/>}
@@ -195,6 +198,7 @@ const TaskListItem: React.FC<Props> = (props) => {
           {/* Edit */}
           <StyledTooltip title="Edit">
             <Checkbox
+              size="small"
               checked={false}
               icon={<EditIcon/>}
               checkedIcon={<EditIcon/>}

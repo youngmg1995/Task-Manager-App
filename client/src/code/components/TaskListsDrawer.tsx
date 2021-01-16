@@ -42,8 +42,6 @@ const useStyles: any = makeStyles((theme) => ({
   },
   headerTitle: {
   },
-  composeButton: {
-  },
   listContainer: {
     gridColumn: "1/2",
     gridRow: "2/3",
@@ -57,7 +55,17 @@ const useStyles: any = makeStyles((theme) => ({
   listItem: {
     borderRadius: `0 100px 100px 0`
   },
+  listItemIcon: {
+    minWidth: "36px",
+  },
 }));
+
+
+// const listItemIconStyles: any = {
+//   root: {
+//     minWidth: "36px",
+//   },
+// };
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -104,6 +112,7 @@ const TaskListsDrawer: React.FC<Props> = (props) => {
 
       <div className={classes.listContainer}>
         <List
+          dense
           component="nav"
           className={classes.list}
         >
@@ -116,8 +125,8 @@ const TaskListsDrawer: React.FC<Props> = (props) => {
               onClick={() => setSelectedTaskList(key)}
               className={classes.listItem}
             >
-              <ListItemIcon>
-                <Icon>{defaultTaskLists[key].icon}</Icon>
+              <ListItemIcon classes={{root: classes.listItemIcon}}>
+                <Icon fontSize="small">{defaultTaskLists[key].icon}</Icon>
               </ListItemIcon>
               <ListItemText primary={selectedTaskList === key ? <b>{defaultTaskLists[key].label}</b> : defaultTaskLists[key].label} />
             </ListItem>
@@ -133,8 +142,8 @@ const TaskListsDrawer: React.FC<Props> = (props) => {
               onClick={() => handleTaskListClick(inTaskList._id)}
               className={classes.listItem}
             >
-              <ListItemIcon>
-                <Icon>{inTaskList.icon}</Icon>
+              <ListItemIcon classes={{root: classes.listItemIcon}}>
+                <Icon fontSize="small">{inTaskList.icon}</Icon>
               </ListItemIcon>
               <ListItemText primary={selectedTaskList === inTaskList._id ? <b>{inTaskList.title}</b> : inTaskList.title} />
             </ListItem>
@@ -148,8 +157,8 @@ const TaskListsDrawer: React.FC<Props> = (props) => {
             onClick={handleComposeClick}
             className={classes.listItem}
           >
-            <ListItemIcon>
-              <Icon>add</Icon>
+            <ListItemIcon classes={{root: classes.listItemIcon}}>
+              <Icon fontSize="small">add</Icon>
             </ListItemIcon>
             <ListItemText primary="Add Task List" />
           </ListItem>
