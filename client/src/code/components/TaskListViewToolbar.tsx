@@ -5,17 +5,11 @@
 // node modules
 import React from "react";
 import {
-  AppBar,
-  Fab,
-  Hidden,
-  IconButton,
-  Toolbar,
-  Typography,
 } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
-// import AddCircleIcon from '@material-ui/icons/AddCircle';
-import AddIcon from '@material-ui/icons/Add';
-import MenuIcon from "@material-ui/icons/Menu";
+
+// local imports
+import TasksSelectButton from "./TasksSelectButton";
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -24,17 +18,11 @@ import MenuIcon from "@material-ui/icons/Menu";
 
 const useStyles: any = makeStyles((theme) => ({
   root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-  },
-  composeButton: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    padding: `${theme.spacing(.5)}px ${theme.spacing(2)}px`,
+    boxShadow: "inset 0 -1px 0 0 rgba(100,121,143,0.122)",
   },
 }));
 
@@ -45,46 +33,24 @@ const useStyles: any = makeStyles((theme) => ({
 
 // props and state types
 type Props = {
-  showTaskLists: boolean,
-  setShowTaskLists: (inVisible: boolean) => void;
-  setShowTaskDialog: (inVisible: boolean) => void;
 };
 
 // actual component
-const ToDoAppBar: React.FC<Props> = (props) => {
+const TaskListViewToolbar: React.FC<Props> = (props) => {
   
   const { 
-    showTaskLists,
-    setShowTaskLists,
-    setShowTaskDialog,
   } = props;
 
   const classes = useStyles();
 
-  function handleComposeClick(): void {
-    setShowTaskDialog(true);
-  };
-
   return (
-    <AppBar position="static" elevation={0}>
-      <Toolbar>
-        <Hidden mdUp>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={() => setShowTaskLists(!showTaskLists)}>
-            <MenuIcon />
-          </IconButton>
-        </Hidden>
-        <Typography variant="h6" className={classes.title}>
-          ToDo App
-        </Typography>
-        <Fab color="inherit" size="medium" aria-label="menu" onClick={handleComposeClick} className={classes.composeButton}>
-          <AddIcon color="primary" fontSize="large"/>
-        </Fab>
-        {/* Old Compose Button */}
-        {/* <IconButton edge="end" color="inherit" aria-label="menu">
-          <AddCircleIcon fontSize="large"/>
-        </IconButton> */}
-      </Toolbar>
-    </AppBar>
+
+    <div className={classes.root}>
+      
+      <TasksSelectButton />
+
+    </div>
+
   );
 };
 
@@ -93,7 +59,7 @@ const ToDoAppBar: React.FC<Props> = (props) => {
 // ----------------------------------------------------------------------- Exports ------------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-export default ToDoAppBar;
+export default TaskListViewToolbar;
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------

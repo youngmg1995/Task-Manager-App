@@ -15,6 +15,7 @@ import { ITask } from "../Tasks";
 import { ITaskList } from "../TaskLists";
 import TaskListsDrawer from "./TaskListsDrawer";
 import TaskListView from "./TaskListView";
+import TaskListViewToolbar from "./TaskListViewToolBar";
 import TaskView from "./TaskView";
 import ToDoAppBar from "./ToDoAppBar";
 
@@ -123,6 +124,11 @@ const BaseLayout: React.FC<Props> = (props) => {
     />
   );
 
+  let toolbar: React.ReactElement;
+  if (true) {
+    toolbar = <TaskListViewToolbar />;
+  }
+
   let view: React.ReactElement;
   if (currentView === "task-list-view") {
     view = (
@@ -183,7 +189,7 @@ const BaseLayout: React.FC<Props> = (props) => {
           <div className={classes.tasksInterface}>
 
             <div className={classes.toolbarContainer}>
-              toolbar
+              {toolbar}
             </div>
 
             <div className={classes.viewContainer}>

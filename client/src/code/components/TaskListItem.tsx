@@ -28,7 +28,7 @@ import { ITask } from "../Tasks";
 
 const useStyles: any = makeStyles((theme) => ({
   root: {
-    padding: `0px ${theme.spacing(2)}px`,
+    padding: `${theme.spacing(.25)}px ${theme.spacing(2)}px`,
     display: "grid",
     alignItems: "center",
     gridTemplateColumns: "auto auto 200px 1fr auto",

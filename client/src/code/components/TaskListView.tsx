@@ -55,7 +55,7 @@ const TaskListView: React.FC<Props> = (props) => {
 
   return (
 
-    <List className={classes.root}>
+    <List disablePadding className={classes.root}>
       {tasks.map((inTask, inIndex) => (
           <TaskListItem
             key={inTask._id}
