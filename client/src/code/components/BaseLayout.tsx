@@ -87,6 +87,8 @@ type Props = {
   selectedTaskList: number | string,
   setSelectedTaskList: (inTaskListID: number | string) => Promise<void>,
   tasks: ITask[],
+  selectedTasks: Set<number>,
+  setSelectedTasks: (inAction: string, inTaskID?: number) => void;
   selectedTask: number | null,
   setSelectedTask: (inIndex: number | null) => void,
   currentView: string,
@@ -105,7 +107,9 @@ const BaseLayout: React.FC<Props> = (props) => {
     taskLists, 
     selectedTaskList,
     setSelectedTaskList,
-    tasks,  
+    tasks,
+    selectedTasks,
+    setSelectedTasks,
     selectedTask,
     setSelectedTask,
     currentView,
@@ -126,7 +130,13 @@ const BaseLayout: React.FC<Props> = (props) => {
 
   let toolbar: React.ReactElement;
   if (true) {
-    toolbar = <TaskListViewToolbar />;
+    toolbar = (
+      <TaskListViewToolbar
+        noneSelected={selectedTasks.size === 0}
+        allSelected={tasks.length === selectedTasks.size}
+        setSelectedTasks={setSelectedTasks}
+      />
+    );
   }
 
   let view: React.ReactElement;
@@ -134,6 +144,8 @@ const BaseLayout: React.FC<Props> = (props) => {
     view = (
       <TaskListView 
         tasks={tasks} 
+        selectedTasks={selectedTasks}
+        setSelectedTasks={setSelectedTasks}
         setSelectedTask={setSelectedTask}
         setShowTaskDialog={setShowTaskDialog}
         deleteTask={deleteTask}
@@ -146,6 +158,8 @@ const BaseLayout: React.FC<Props> = (props) => {
     view = (
       <TaskListView 
         tasks={tasks} 
+        selectedTasks={selectedTasks}
+        setSelectedTasks={setSelectedTasks}
         setSelectedTask={setSelectedTask}
         setShowTaskDialog={setShowTaskDialog}
         deleteTask={deleteTask}

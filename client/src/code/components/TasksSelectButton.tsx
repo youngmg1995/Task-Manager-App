@@ -10,6 +10,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import IndeterminateCheckBoxIcon from '@material-ui/icons/IndeterminateCheckBox';
 
 // local imports
 
@@ -20,6 +21,9 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
 const useStyles: any = makeStyles(() => ({
   root: {
+  },
+  tooltip: {
+    fontSize: 12,
   },
   selectButton: {
     width: 28,
@@ -44,32 +48,53 @@ const useStyles: any = makeStyles(() => ({
 
 // props and state types
 type Props = {
+  noneSelected: boolean,
+  allSelected: boolean,
+  setSelectedTasks: (inAction: string, inTaskID?: number) => void;
 };
 
 // actual component
 const TasksSelectButton: React.FC<Props> = (props) => {
   
-  const { 
+  const {
+    noneSelected,
+    allSelected,
+    setSelectedTasks,
   } = props;
 
   const classes = useStyles();
 
+  function handleSelectClick(): void {
+    if (noneSelected) setSelectedTasks("all");
+    else setSelectedTasks("none");
+  }
+
   return (
 
-    <Tooltip title="Select">
+    <Tooltip 
+      title="Select" 
+      enterDelay={500} 
+      classes={{tooltip: classes.tooltip}}
+    >
       <div className={classes.root}>
 
         {/* Select Checkbox */}
         <Checkbox 
           size="small"
+          disableRipple
+          checked={allSelected && !noneSelected}
+          indeterminate={!allSelected && !noneSelected}
+          indeterminateIcon={<IndeterminateCheckBoxIcon color="secondary"/>}
+          onClick={handleSelectClick}
           classes={{root: classes.selectButton}}
         />
 
         {/* Select Dropdown */}
         <Checkbox 
-          checked={false}
           size="small"
+          disableRipple
           icon={<ArrowDropDownIcon />}
+          checked={false}
           classes={{root: classes.dropDownButton}}
         />
 

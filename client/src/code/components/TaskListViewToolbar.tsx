@@ -33,12 +33,18 @@ const useStyles: any = makeStyles((theme) => ({
 
 // props and state types
 type Props = {
+  noneSelected: boolean,
+  allSelected: boolean,
+  setSelectedTasks: (inAction: string, inTaskID?: number) => void;
 };
 
 // actual component
 const TaskListViewToolbar: React.FC<Props> = (props) => {
   
   const { 
+    noneSelected,
+    allSelected,
+    setSelectedTasks,
   } = props;
 
   const classes = useStyles();
@@ -47,7 +53,11 @@ const TaskListViewToolbar: React.FC<Props> = (props) => {
 
     <div className={classes.root}>
       
-      <TasksSelectButton />
+      <TasksSelectButton 
+        noneSelected={noneSelected}
+        allSelected={allSelected}
+        setSelectedTasks={setSelectedTasks}
+      />
 
     </div>
 

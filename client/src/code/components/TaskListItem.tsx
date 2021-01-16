@@ -125,6 +125,8 @@ function StyledTooltip(props: TooltipProps) {
 type Props = {
   index: number,
   task: ITask,
+  selected: boolean,
+  setSelectedTasks: (inAction: string, inTaskID?: number) => void;
   setSelectedTask: (inIndex: number | null) => void,
   setShowTaskDialog: (inVisible: boolean, inTaskID?: number) => void;
   deleteTask: (inTaskID: number) => Promise<void>;
@@ -137,6 +139,8 @@ const TaskListItem: React.FC<Props> = (props) => {
   const {
     index,
     task,
+    selected,
+    setSelectedTasks,
     setSelectedTask,
     setShowTaskDialog,
     deleteTask,
@@ -149,6 +153,14 @@ const TaskListItem: React.FC<Props> = (props) => {
 
   function handleItemClick(): void {
     setSelectedTask(index);
+  }
+
+  function handleSelectClick(event: any): void {
+    event.stopPropagation();
+    if (task._id) {
+      const action: string = selected ? "remove" : "add";
+      setSelectedTasks(action, task._id);
+    }
   }
 
   function handleUrgentClick(event: any): void {
@@ -183,7 +195,12 @@ const TaskListItem: React.FC<Props> = (props) => {
       {/* Select */}
       <div className={classes.selectIcon}>
         <StyledTooltip title="Select">
-          <Checkbox size="small" classes={{root: classes.checkbox}}/>
+          <Checkbox 
+            size="small"
+            checked={selected}
+            onClick={handleSelectClick}
+            classes={{root: classes.checkbox}}
+          />
         </StyledTooltip>
       </div>
       {/* Mark Urgent */}

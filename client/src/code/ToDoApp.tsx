@@ -40,6 +40,7 @@ type State = {
   taskLists: ITaskList[],
   selectedTaskList: number | string,
   tasks: any[],
+  selectedTasks: Set<number>,
   selectedTask: number | null,
   currentView: string,
 };
@@ -59,6 +60,7 @@ export default class ToDoApp extends React.Component<Props, State> {
       taskLists: [],
       selectedTaskList: "all",
       tasks: [],
+      selectedTasks: new Set(),
       selectedTask: null,
       currentView: "task-list-view",
     };
@@ -84,6 +86,9 @@ export default class ToDoApp extends React.Component<Props, State> {
 
     // for deleting a task
     this.deleteTask = this.deleteTask.bind(this);
+
+    // for selecting tasks to edit while in the task list view
+    this.setSelectedTasks = this.setSelectedTasks.bind(this);
 
     // for selecting specific tasks to view
     this.setSelectedTask = this.setSelectedTask.bind(this);
@@ -298,6 +303,42 @@ export default class ToDoApp extends React.Component<Props, State> {
     });
   }
 
+  setSelectedTasks(inAction: string, inTaskID?: number): void {
+
+    if (inAction === "all") {
+      this.setState(state => {
+        let newSelectedTasks: Set<number> = new Set(state.tasks.map((inTask) => (inTask._id)));
+        // let newSelectedTasks: Set<number> = new Set();
+        // state.tasks.forEach((inTask) => {
+        //   newSelectedTasks.add(inTask._id);
+        // });
+        return {
+          selectedTasks: newSelectedTasks,
+        };
+      });
+    } else if (inAction === "none") {
+      this.setState({
+        selectedTasks: new Set(),
+      });
+    } else if (inAction === "add" && inTaskID) {
+      this.setState(state => {
+        let newSelectedTasks: Set<number> = state.selectedTasks;
+        newSelectedTasks.add(inTaskID);
+        return {
+          selectedTasks: newSelectedTasks,
+        };
+      });
+    } else if (inAction === "remove" && inTaskID) {
+      this.setState(state => {
+        let newSelectedTasks: Set<number> = state.selectedTasks;
+        newSelectedTasks.delete(inTaskID);
+        return {
+          selectedTasks: newSelectedTasks,
+        };
+      });
+    }
+  }
+
   setSelectedTask(inIndex: number | null): void {
     this.setState({
       currentView: "task-view",
@@ -361,6 +402,8 @@ export default class ToDoApp extends React.Component<Props, State> {
           selectedTaskList={this.state.selectedTaskList}
           setSelectedTaskList={this.setSelectedTaskList}
           tasks={this.state.tasks}
+          selectedTasks={this.state.selectedTasks}
+          setSelectedTasks={this.setSelectedTasks}
           selectedTask={this.state.selectedTask}
           setSelectedTask={this.setSelectedTask}
           currentView={this.state.currentView}

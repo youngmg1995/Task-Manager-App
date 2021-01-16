@@ -34,6 +34,8 @@ const useStyles: any = makeStyles((theme) => ({
 // props and state types
 type Props = {
   tasks: ITask[],
+  selectedTasks: Set<number>,
+  setSelectedTasks: (inAction: string, inTaskID?: number) => void;
   setSelectedTask: (inIndex: number | null) => void,
   setShowTaskDialog: (inVisible: boolean, inTaskID?: number) => void;
   deleteTask: (inTaskID: number) => Promise<void>;
@@ -45,6 +47,8 @@ const TaskListView: React.FC<Props> = (props) => {
   
   const { 
     tasks,
+    selectedTasks,
+    setSelectedTasks,
     setSelectedTask,
     setShowTaskDialog,
     deleteTask,
@@ -61,6 +65,8 @@ const TaskListView: React.FC<Props> = (props) => {
             key={inTask._id}
             index={inIndex}
             task={inTask}
+            selected={inTask._id ? selectedTasks.has(inTask._id) : false}
+            setSelectedTasks={setSelectedTasks}
             setSelectedTask={setSelectedTask}
             setShowTaskDialog={setShowTaskDialog}
             deleteTask={deleteTask}
