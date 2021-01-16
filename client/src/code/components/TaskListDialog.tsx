@@ -74,7 +74,6 @@ const TaskListDialog: React.FC<Props> = (props) => {
     setTaskList,
     submitTaskList,
   } = props;
-  console.log(taskList);
 
   function handleClose(): void {
     setTaskList();

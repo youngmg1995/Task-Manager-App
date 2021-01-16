@@ -135,6 +135,42 @@ app.get("/tasks",
   }
 );
 
+// list all urgent tasks (setup to return type any[] in case fiedls excluded in the future)
+app.get("/tasks/urgent",
+  async (inRequest: Request, inResponse: Response) => {
+    console.log("GET /tasks/urgent");
+    try {
+      const Worker: Tasks.Worker = new Tasks.Worker();
+      const queryParams: any = { urgent: true };
+      const tasks: ITask[] = await Worker.queryTasks(queryParams);
+      const finalTasks = filterTasks(tasks);
+      console.log("GET /tasks/urgent : OK", finalTasks);
+      inResponse.json(finalTasks);
+    } catch (inError) {
+      console.log("GET /tasks/urgent : Error", inError);
+      inResponse.status(inError.status).send(inError.message);
+    }
+  }
+);
+
+// list all completed tasks (setup to return type any[] in case fiedls excluded in the future)
+app.get("/tasks/completed",
+  async (inRequest: Request, inResponse: Response) => {
+    console.log("GET /tasks/completed");
+    try {
+      const Worker: Tasks.Worker = new Tasks.Worker();
+      const queryParams: any = { completed: true };
+      const tasks: ITask[] = await Worker.queryTasks(queryParams);
+      const finalTasks = filterTasks(tasks);
+      console.log("GET /tasks/completed : OK", finalTasks);
+      inResponse.json(finalTasks);
+    } catch (inError) {
+      console.log("GET /tasks/completed : Error", inError);
+      inResponse.status(inError.status).send(inError.message);
+    }
+  }
+);
+
 // get specific task
 app.get("/tasks/:id",
   async (inRequest: Request, inResponse: Response) => {

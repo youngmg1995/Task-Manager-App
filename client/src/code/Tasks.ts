@@ -53,6 +53,26 @@ export class Worker {
     return response.data;
   }
 
+  // list all urgent tasks
+  public async listUrgentTasks(): Promise<any[]> {
+    console.log("Client - GET /tasks/urgent");
+    const response: AxiosResponse = await axios.get(
+      `${this.serverAddress}/tasks/urgent`,
+    );
+    console.log("Client - GET /tasks/urgent: response = ", response);
+    return response.data;
+  }
+
+  // list all completed tasks
+  public async listCompletedTasks(): Promise<any[]> {
+    console.log("Client - GET /tasks/completed");
+    const response: AxiosResponse = await axios.get(
+      `${this.serverAddress}/tasks/completed`,
+    );
+    console.log("Client - GET /tasks/completed: response = ", response);
+    return response.data;
+  }
+
   // get specific tasks
   public async getTask(inID: number): Promise<ITask> {
     console.log("Client - GET /tasks/:id", inID);

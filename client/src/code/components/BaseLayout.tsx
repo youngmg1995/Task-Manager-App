@@ -83,8 +83,8 @@ type Props = {
   setShowTaskListDialog: (inVisible: boolean) => void;
   setShowTaskDialog: (inVisible: boolean, inTaskID?: number) => void;
   taskLists: ITaskList[],
-  selectedTaskList: ITaskList | null,
-  setSelectedTaskList: (inTaskList: ITaskList | null) => Promise<void>,
+  selectedTaskList: number | string,
+  setSelectedTaskList: (inTaskListID: number | string) => Promise<void>,
   tasks: ITask[],
   selectedTask: number | null,
   setSelectedTask: (inIndex: number | null) => void,

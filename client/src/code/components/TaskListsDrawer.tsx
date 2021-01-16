@@ -15,6 +15,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 
 // local imports
+import { defaultTaskLists } from "../defaultSettings";
 import { ITaskList } from "../TaskLists";
 
 
@@ -66,8 +67,8 @@ const useStyles: any = makeStyles((theme) => ({
 // props and state types
 type Props = {
   taskLists: ITaskList[],
-  selectedTaskList: ITaskList | null,
-  setSelectedTaskList: (inTaskList: ITaskList | null) => Promise<void>,
+  selectedTaskList: number | string,
+  setSelectedTaskList: (inTaskListID: number | string) => Promise<void>,
   setShowTaskListDialog: (inVisible: boolean) => void,
 };
 
@@ -87,6 +88,10 @@ const TaskListsDrawer: React.FC<Props> = (props) => {
     setShowTaskListDialog(true);
   };
 
+  function handleTaskListClick(inTaskID: number | string | undefined): void {
+    if (inTaskID !== undefined) setSelectedTaskList(inTaskID);
+  }
+
   return (
 
     <div className={classes.root}>
@@ -102,34 +107,36 @@ const TaskListsDrawer: React.FC<Props> = (props) => {
           component="nav"
           className={classes.list}
         >
-          {/* All Tasks */}
-          <ListItem
-            button
-            disableRipple
-            selected={selectedTaskList === null}
-            onClick={() => setSelectedTaskList(null)}
-            className={classes.listItem}
-          >
-            <ListItemIcon>
-              <Icon>inbox</Icon>
-            </ListItemIcon>
-            <ListItemText primary={selectedTaskList === null ? <b>All Tasks</b> : "All Tasks"} />
-          </ListItem>
+          {/* Default Task Lists */}
+          {Object.keys(defaultTaskLists).map((key) => (
+            <ListItem
+              button
+              disableRipple
+              selected={selectedTaskList === key}
+              onClick={() => setSelectedTaskList(key)}
+              className={classes.listItem}
+            >
+              <ListItemIcon>
+                <Icon>{defaultTaskLists[key].icon}</Icon>
+              </ListItemIcon>
+              <ListItemText primary={selectedTaskList === key ? <b>{defaultTaskLists[key].label}</b> : defaultTaskLists[key].label} />
+            </ListItem>
+          ))}
 
           {/* Custom Task Lists */}
           {taskLists.map((inTaskList) => (
             <ListItem
-              key={inTaskList._id} 
+              key={inTaskList._id}
               button
               disableRipple
-              selected={selectedTaskList?._id === inTaskList._id}
-              onClick={() => setSelectedTaskList(inTaskList)}
+              selected={selectedTaskList === inTaskList._id}
+              onClick={() => handleTaskListClick(inTaskList._id)}
               className={classes.listItem}
             >
               <ListItemIcon>
                 <Icon>{inTaskList.icon}</Icon>
               </ListItemIcon>
-              <ListItemText primary={selectedTaskList?._id === inTaskList._id ? <b>{inTaskList.title}</b> : inTaskList.title} />
+              <ListItemText primary={selectedTaskList === inTaskList._id ? <b>{inTaskList.title}</b> : inTaskList.title} />
             </ListItem>
           ))}
 

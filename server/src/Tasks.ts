@@ -199,6 +199,25 @@ export class Worker {
     });
   }
 
+  // list tasks meeting the given query parameters
+  public queryTasks(inQueryParams: any): Promise<ITask[]> {
+    return new Promise((inResolve, inReject) => {
+      this.db.find(
+        inQueryParams,
+        {},
+        (inError: Error | null, inDocs: ITask[]) => {
+          if (inError) {
+            console.log("Tasks.Worker.getTaskList(): Error", inError);
+            inReject({ status: 500, message: "Internal Server Error" });
+          } else {
+            console.log("Tasks.Worker.getTaskList(): OK", inDocs);
+            inResolve(inDocs);
+          }
+        }
+      );
+    });
+  }
+
 };
 
 

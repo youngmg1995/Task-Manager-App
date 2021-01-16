@@ -12,29 +12,15 @@ import {
   TaskDialog,
   TaskListDialog,
 } from "./components";
+import {
+  defaultTask,
+  defaultTaskList,
+  defaultTaskLists,
+} from "./defaultSettings";
 import * as Tasks from "./Tasks";
 import { ITask, filterTask } from "./Tasks";
 import * as TaskLists from "./TaskLists";
 import { ITaskList } from "./TaskLists";
-
-
-// --------------------------------------------------------------------------------------------------------------------------------------------------------
-// ----------------------------------------------------------------------- Settings -----------------------------------------------------------------------
-// --------------------------------------------------------------------------------------------------------------------------------------------------------
-
-// default task list  placeholder for creating task lists
-const defaultTaskList: ITaskList = { 
-  title: "",
-  icon: "label",
-};
-
-// default task placeholder for creating tasks
-const defaultTask: ITask = { 
-  title: "",
-  urgent: false,
-  completed: false,
-  description: ""
-};
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -52,7 +38,7 @@ type State = {
   showTaskDialog: boolean,
   dialogTask: ITask,
   taskLists: ITaskList[],
-  selectedTaskList: ITaskList | null,
+  selectedTaskList: number | string,
   tasks: any[],
   selectedTask: number | null,
   currentView: string,
@@ -71,7 +57,7 @@ export default class ToDoApp extends React.Component<Props, State> {
       showTaskDialog: false,
       dialogTask: defaultTask,
       taskLists: [],
-      selectedTaskList: null,
+      selectedTaskList: "all",
       tasks: [],
       selectedTask: null,
       currentView: "task-list-view",
@@ -163,8 +149,8 @@ export default class ToDoApp extends React.Component<Props, State> {
         dialogTask = await worker.getTask(inTaskID);
       } else {
         dialogTask = defaultTask;
-        if (this.state.selectedTaskList) {
-          Object.assign(dialogTask, {taskList: this.state.selectedTaskList._id});
+        if (defaultTaskLists[this.state.selectedTaskList] === undefined) {
+          Object.assign(dialogTask, {taskList: this.state.selectedTaskList});
         }
       }
       this.setState({
@@ -210,7 +196,7 @@ export default class ToDoApp extends React.Component<Props, State> {
     else {
       const newTask: ITask = await worker.createTask(this.state.dialogTask);
       const filteredTask: any = filterTask(newTask);
-      if (this.state.selectedTaskList === null || newTask.taskList === this.state.selectedTaskList?._id) {
+      if (newTask.taskList === this.state.selectedTaskList) {
         this.setState(state => ({
           tasks: [filteredTask].concat(state.tasks),
         }));
@@ -222,15 +208,13 @@ export default class ToDoApp extends React.Component<Props, State> {
 
   };
 
-  async setSelectedTaskList(inTaskList: ITaskList | null, isInit: boolean = false): Promise<void> {
+  async setSelectedTaskList(inTaskListID: number | string, isInit: boolean = false): Promise<void> {
 
     // if we are not initializing the App and the task list was not changed, then we don't need to grab any 
     // new tasks, so just set the currentView to "task-list-view" and selectedTask to null
-    if (!isInit && (
-      (inTaskList === null && this.state.selectedTaskList === null)
-      ||
-      (inTaskList !== null && this.state.selectedTaskList !== null && this.state.selectedTaskList._id === inTaskList._id)
-    )) {
+    // if (!isInit && inTaskListID === this.state.selectedTaskList) {
+    // actually gonna make it update even if its the same task list
+    if (false) {
       this.setState({
         currentView: "task-list-view",
         selectedTask: null,
@@ -241,19 +225,30 @@ export default class ToDoApp extends React.Component<Props, State> {
       // initiate list for tasks
       let tasks: any[];
 
-      // if we are initializing the App of if task list has been changed to null then grab all tasks
-      if (isInit || inTaskList === null) {
+      // if we are initializing the App of if task list has been changed to "all" (for all tasks) then grab all tasks
+      if (isInit || inTaskListID === "all") {
         const worker: Tasks.Worker = new Tasks.Worker();
         tasks = await worker.listTasks();
+      // else only grab the tasks for the specified default task list (such as "Urgent" or "Completed" which aren't actual task lists)
+      // and use their own API
+      } else if (defaultTaskLists[inTaskListID]) {
+        const worker: Tasks.Worker = new Tasks.Worker();
+        if (inTaskListID === "urgent") {
+          tasks = await worker.listUrgentTasks();
+        } else if (inTaskListID === "completed") {
+          tasks = await worker.listCompletedTasks();
+        } else {
+          tasks = await worker.listTasks();
+        }
       // else only grab the tasks for the specified task list
       } else {
         const worker: TaskLists.Worker = new TaskLists.Worker();
-        tasks = await worker.getTaskListTasks(String(inTaskList._id));
+        tasks = await worker.getTaskListTasks(String(inTaskListID));
       }
   
       // update state with new tasks, new task list, and set currentView to "task-list-view"
       this.setState({
-        selectedTaskList: inTaskList,
+        selectedTaskList: inTaskListID,
         tasks: tasks,
         currentView: "task-list-view",
         selectedTask: null,
@@ -343,7 +338,7 @@ export default class ToDoApp extends React.Component<Props, State> {
       inTaskLists.forEach((inTaskList) => {
         this.addTaskList(inTaskList);
       });
-      this.setSelectedTaskList(null, true).then(() => {
+      this.setSelectedTaskList("all", true).then(() => {
         this.setShowLoadingScreen(false);
       })
     });
