@@ -308,10 +308,6 @@ export default class ToDoApp extends React.Component<Props, State> {
     if (inAction === "all") {
       this.setState(state => {
         let newSelectedTasks: Set<number> = new Set(state.tasks.map((inTask) => (inTask._id)));
-        // let newSelectedTasks: Set<number> = new Set();
-        // state.tasks.forEach((inTask) => {
-        //   newSelectedTasks.add(inTask._id);
-        // });
         return {
           selectedTasks: newSelectedTasks,
         };
@@ -319,6 +315,34 @@ export default class ToDoApp extends React.Component<Props, State> {
     } else if (inAction === "none") {
       this.setState({
         selectedTasks: new Set(),
+      });
+    } else if (inAction === "urgent") {
+      this.setState(state => {
+        let newSelectedTasks: Set<number> = new Set(state.tasks.filter((inTask) => (inTask.urgent === true)).map((inTask) => (inTask._id)));
+        return {
+          selectedTasks: newSelectedTasks,
+        };
+      });
+    } else if (inAction === "not urgent") {
+      this.setState(state => {
+        let newSelectedTasks: Set<number> = new Set(state.tasks.filter((inTask) => (inTask.urgent === false)).map((inTask) => (inTask._id)));
+        return {
+          selectedTasks: newSelectedTasks,
+        };
+      });
+    } else if (inAction === "completed") {
+      this.setState(state => {
+        let newSelectedTasks: Set<number> = new Set(state.tasks.filter((inTask) => (inTask.completed === true)).map((inTask) => (inTask._id)));
+        return {
+          selectedTasks: newSelectedTasks,
+        };
+      });
+    } else if (inAction === "not completed") {
+      this.setState(state => {
+        let newSelectedTasks: Set<number> = new Set(state.tasks.filter((inTask) => (inTask.completed === false)).map((inTask) => (inTask._id)));
+        return {
+          selectedTasks: newSelectedTasks,
+        };
       });
     } else if (inAction === "add" && inTaskID) {
       this.setState(state => {

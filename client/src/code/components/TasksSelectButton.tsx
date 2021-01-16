@@ -6,6 +6,8 @@
 import React from "react";
 import {
   Checkbox,
+  Menu,
+  MenuItem,
   Tooltip,
 } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
@@ -19,12 +21,28 @@ import IndeterminateCheckBoxIcon from '@material-ui/icons/IndeterminateCheckBox'
 // ------------------------------------------------------------------------ Styles ------------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-const useStyles: any = makeStyles(() => ({
+const actions: any[] = [
+  {action: "all", label: "All"},
+  {action: "none", label: "None"},
+  {action: "urgent", label: "Urgent"},
+  {action: "not urgent", label: "Not Urgent"},
+  {action: "completed", label: "Completed"},
+  {action: "not completed", label: "Not Completed"},
+];
+
+
+// --------------------------------------------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------ Styles ------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------------------------------------------
+
+const useStyles: any = makeStyles((theme) => ({
   root: {
   },
   tooltip: {
     fontSize: 12,
     marginTop: 4,
+  },
+  select: {
   },
   selectButton: {
     width: 28,
@@ -39,6 +57,9 @@ const useStyles: any = makeStyles(() => ({
     height: 40,
     borderRadius: 2,
     padding: 0,
+  },
+  dropDownItem: {
+    padding: `${theme.spacing(.5)}px ${theme.spacing(4)}px`,
   },
 }));
 
@@ -65,6 +86,28 @@ const TasksSelectButton: React.FC<Props> = (props) => {
 
   const classes = useStyles();
 
+  const selectRef: any = React.createRef();
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  function handleDropdownClick(): void {
+    setAnchorEl(currentAnchorEl => {
+      if (Boolean(currentAnchorEl)) return null;
+      else return selectRef.current;
+    });
+  }
+
+  function handleMenuClose(): void {
+    setAnchorEl(null);
+  }
+
+  function handleMenuItemClick(event: any): void {
+    const action: string = event.target.id;
+    console.log(action);
+    setSelectedTasks(action);
+    handleMenuClose();    
+  }
+
   function handleSelectClick(): void {
     if (noneSelected) setSelectedTasks("all");
     else setSelectedTasks("none");
@@ -72,35 +115,67 @@ const TasksSelectButton: React.FC<Props> = (props) => {
 
   return (
 
-    <Tooltip 
-      title="Select" 
-      enterDelay={500} 
-      classes={{tooltip: classes.tooltip, tooltipPlacementBottom: classes.placementBottom}}
-    >
-      <div className={classes.root}>
+    <div className={classes.root}>
 
-        {/* Select Checkbox */}
-        <Checkbox 
-          size="small"
-          disableRipple
-          checked={allSelected && !noneSelected}
-          indeterminate={!allSelected && !noneSelected}
-          indeterminateIcon={<IndeterminateCheckBoxIcon color="secondary"/>}
-          onClick={handleSelectClick}
-          classes={{root: classes.selectButton}}
-        />
+      {/* Actual Select Component */}
+      <Tooltip 
+        title="Select" 
+        enterDelay={500} 
+        classes={{tooltip: classes.tooltip, tooltipPlacementBottom: classes.placementBottom}}
+      >
+        <div ref={selectRef} className={classes.select}>
 
-        {/* Select Dropdown */}
-        <Checkbox 
-          size="small"
-          disableRipple
-          icon={<ArrowDropDownIcon />}
-          checked={false}
-          classes={{root: classes.dropDownButton}}
-        />
+          {/* Select Checkbox */}
+          <Checkbox 
+            size="small"
+            disableRipple
+            checked={allSelected && !noneSelected}
+            indeterminate={!allSelected && !noneSelected}
+            indeterminateIcon={<IndeterminateCheckBoxIcon color="secondary"/>}
+            onClick={handleSelectClick}
+            classes={{root: classes.selectButton}}
+          />
 
-      </div>
-    </Tooltip>
+          {/* Select Dropdown */}
+          <Checkbox 
+            size="small"
+            disableRipple
+            icon={<ArrowDropDownIcon />}
+            checked={false}
+            onClick={handleDropdownClick}
+            classes={{root: classes.dropDownButton}}
+          />
+
+        </div>
+      </Tooltip>
+
+      {/* Menu for Dropdown */}
+      <Menu
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+        getContentAnchorEl={null}
+        keepMounted
+        MenuListProps={{
+          dense: true,
+        }}
+        open={Boolean(anchorEl)}
+        onClose={handleMenuClose}
+      >
+        {actions.map((inAction) => (
+          <MenuItem key={inAction.action} id={inAction.action} onClick={handleMenuItemClick} className={classes.dropDownItem}>
+            {inAction.label}
+          </MenuItem>
+        ))}
+      </Menu>
+
+    </div>
 
   );
 };
