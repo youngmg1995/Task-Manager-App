@@ -24,6 +24,7 @@ const useStyles: any = makeStyles(() => ({
   },
   tooltip: {
     fontSize: 12,
+    marginTop: 4,
   },
   selectButton: {
     width: 28,
@@ -74,7 +75,7 @@ const TasksSelectButton: React.FC<Props> = (props) => {
     <Tooltip 
       title="Select" 
       enterDelay={500} 
-      classes={{tooltip: classes.tooltip}}
+      classes={{tooltip: classes.tooltip, tooltipPlacementBottom: classes.placementBottom}}
     >
       <div className={classes.root}>
 

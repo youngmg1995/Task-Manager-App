@@ -103,6 +103,7 @@ const useStyles: any = makeStyles((theme) => ({
 const tooltipStyles: any = makeStyles(() => ({
   tooltip: {
     fontSize: 12,
+    marginTop: 8,
   },
 }));
 function StyledTooltip(props: TooltipProps) {
