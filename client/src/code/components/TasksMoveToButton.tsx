@@ -14,9 +14,10 @@ import {
   Tooltip,
 } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
-import LabelIcon from '@material-ui/icons/Label';
-// import LabelOffIcon from '@material-ui/icons/LabelOff';
-// import MoveToInboxIcon from '@material-ui/icons/MoveToInbox';
+// import LabelIcon from '@material-ui/icons/Label';
+
+import FolderIcon from '@material-ui/icons/Folder';
+import ForwardIcon from '@material-ui/icons/Forward';
 
 
 // local imports
@@ -41,6 +42,39 @@ const useStyles: any = makeStyles((theme) => ({
     minWidth: "36px",
   }
 }));
+
+const customIconStyles: any = makeStyles(() => ({
+  root: {
+    display: "grid",
+    gridTemplateColumns: "auto",
+    gridTemplateRows: "auto",
+  },
+  outerIcon: {
+    gridColumn: "1/2",
+    gridRow: "1/2",
+    alignSelf: "center",
+    justifySelf: "center",
+  },
+  innerIcon: {
+    gridColumn: "1/2",
+    gridRow: "1/2",
+    fontSize: 11,
+    color: "white",
+    alignSelf: "center",
+    justifySelf: "center",
+  },
+}));
+const MoveToIcon: React.FC = () => {
+
+  const classes: any = customIconStyles();
+
+  return (
+    <div className={classes.root}>
+      <FolderIcon fontSize="small" className={classes.outerIcon}/>
+      <ForwardIcon fontSize="small" className={classes.innerIcon}/>
+    </div>
+  );
+}
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -89,7 +123,7 @@ const TasksMoveToButton: React.FC<Props> = (props) => {
           size="small"
           disableRipple
           checked={false}
-          icon={<LabelIcon />}
+          icon={<MoveToIcon />}
           onClick={handleButtonClick}
         />
       </Tooltip>
