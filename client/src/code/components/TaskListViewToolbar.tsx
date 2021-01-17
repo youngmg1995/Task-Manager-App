@@ -11,12 +11,13 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import Tooltip, { TooltipProps } from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
-import MoveToInboxIcon from '@material-ui/icons/MoveToInbox';
 import WhatshotIcon from '@material-ui/icons/Whatshot';
 import CancelIcon from '@material-ui/icons/Cancel';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 // local imports
+import { ITaskList } from "../TaskLists";
+import TasksMoveToButton from "./TasksMoveToButton";
 import TasksSelectButton from "./TasksSelectButton";
 
 
@@ -69,7 +70,8 @@ function StyledTooltip(props: TooltipProps) {
 type Props = {
   noneSelected: boolean,
   allSelected: boolean,
-  setSelectedTasks: (inAction: string, inTaskID?: number) => void;
+  setSelectedTasks: (inAction: string, inTaskID?: number) => void,
+  taskLists: ITaskList[],
 };
 
 // actual component
@@ -79,6 +81,7 @@ const TaskListViewToolbar: React.FC<Props> = (props) => {
     noneSelected,
     allSelected,
     setSelectedTasks,
+    taskLists,
   } = props;
 
   const classes = useStyles();
@@ -112,14 +115,7 @@ const TaskListViewToolbar: React.FC<Props> = (props) => {
             />
           </StyledTooltip>
           {/* Switch Task List */}
-          <StyledTooltip title="Move To">
-            <Checkbox
-              size="small"
-              checked={false}
-              icon={<MoveToInboxIcon/>}
-              checkedIcon={<MoveToInboxIcon/>}
-            />
-          </StyledTooltip>
+          <TasksMoveToButton taskLists={taskLists}/>
 
           <div className={classes.divider}>
             <Divider orientation="vertical" light/>

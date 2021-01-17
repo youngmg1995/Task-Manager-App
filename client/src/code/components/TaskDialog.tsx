@@ -11,6 +11,9 @@ import {
     DialogContent,
     // DialogContentText,
     DialogTitle,
+    Icon,
+    ListItemIcon,
+    ListItemText,
     MenuItem,
     TextField,
 } from "@material-ui/core";
@@ -28,9 +31,13 @@ import { ITaskList } from "../TaskLists";
 const useStyles: any = makeStyles(() => ({
   root: {
   },
+  listItemIcon: {
+    minWidth: "44px",
+  },
 }));
 
-const taskListSelectProps: any = {
+const selectProps: any = {
+  // renderValue: (value: any) => <React.Fragment><div>{value}</div><div>this</div></React.Fragment>,
   MenuProps:{
     anchorOrigin: {
       vertical: 'bottom',
@@ -43,10 +50,17 @@ const taskListSelectProps: any = {
     getContentAnchorEl:null,
     PaperProps: {
       style: {
-        maxHeight: 160,
+        maxHeight: "192px",
       },
     },
-  }
+  },
+  SelectDisplayProps: {
+    style: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+    },
+  },
 };
 
 
@@ -75,6 +89,8 @@ const TaskDialog: React.FC<Props> = (props) => {
     submitTask,
     taskLists,
   } = props;
+
+  // function renderValue(inValue: any): React.E
 
   function handleFormChange(event: any): void {
 
@@ -146,16 +162,22 @@ const TaskDialog: React.FC<Props> = (props) => {
             label="Task List"
             fullWidth
             name="taskList"
-            SelectProps={taskListSelectProps}
+            SelectProps={selectProps}
             value={task.taskList}
             onChange={handleFormChange}
           >
             <MenuItem value={undefined}>
-              <em>None</em>
+              <ListItemIcon classes={{root: classes.listItemIcon}}>
+                <Icon>label_off</Icon>
+              </ListItemIcon>
+              <ListItemText primary={<em>None</em>} />
             </MenuItem>
             {taskLists.map((inTaskList) => (
               <MenuItem key={inTaskList._id} value={inTaskList._id}>
-                {inTaskList.title}
+                <ListItemIcon classes={{root: classes.listItemIcon}}>
+                  <Icon>{inTaskList.icon}</Icon>
+                </ListItemIcon>
+                <ListItemText primary={inTaskList.title} />
               </MenuItem>
             ))}
           </TextField>

@@ -15,7 +15,7 @@ import { ITask } from "../Tasks";
 import { ITaskList } from "../TaskLists";
 import TaskListsDrawer from "./TaskListsDrawer";
 import TaskListView from "./TaskListView";
-import TaskListViewToolbar from "./TaskListViewToolBar";
+import TaskListViewToolbar from "./TaskListViewToolbar";
 import TaskView from "./TaskView";
 import ToDoAppBar from "./ToDoAppBar";
 
@@ -135,6 +135,7 @@ const BaseLayout: React.FC<Props> = (props) => {
         noneSelected={selectedTasks.size === 0}
         allSelected={tasks.length === selectedTasks.size}
         setSelectedTasks={setSelectedTasks}
+        taskLists={taskLists}
       />
     );
   }
