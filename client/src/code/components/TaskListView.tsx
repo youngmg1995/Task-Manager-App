@@ -23,6 +23,7 @@ const useStyles: any = makeStyles((theme) => ({
     maxHeight: "100%",
     overflow: "auto",
     paddingRight: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
   },
 }));
 

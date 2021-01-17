@@ -6,12 +6,10 @@
 import React, {useState} from "react";
 import {
   Checkbox,
-  // Divider,
-  // Paper,
   Typography,
 } from "@material-ui/core";
 import Tooltip, { TooltipProps } from '@material-ui/core/Tooltip';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, fade } from '@material-ui/core/styles';
 import CancelIcon from '@material-ui/icons/Cancel';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -32,6 +30,7 @@ const useStyles: any = makeStyles((theme) => ({
     display: "grid",
     alignItems: "center",
     gridTemplateColumns: "auto auto 200px 1fr auto",
+    backgroundColor: (props: Props) => props.selected ? fade(theme.palette.background.default, 1) : "transparent",
     boxShadow: "inset 0 -1px 0 0 rgba(100,121,143,0.122)",
     "&:hover": {
       cursor: "pointer",
@@ -93,7 +92,6 @@ const useStyles: any = makeStyles((theme) => ({
     marginRight: theme.spacing(.75),
   },
   checkbox: {
-    // backgroundColor: "black",
     width: 28,
     height: 28,
     padding: 0,
@@ -109,12 +107,14 @@ const tooltipStyles: any = makeStyles(() => ({
 function StyledTooltip(props: TooltipProps) {
   const classes = tooltipStyles();
 
-  return <Tooltip 
-    enterDelay={500} 
-    // leaveDelay={200} 
-    classes={classes} 
-    {...props}
-  />;
+  return (
+    <Tooltip 
+      enterDelay={500} 
+      // leaveDelay={200} 
+      classes={classes} 
+      {...props}
+    />
+  );
 }
 
 
@@ -150,7 +150,7 @@ const TaskListItem: React.FC<Props> = (props) => {
 
   const [isHovered, setIsHovered] = useState<boolean>(false);
 
-  const classes = useStyles();
+  const classes = useStyles({selected: selected});
 
   function handleItemClick(): void {
     setSelectedTask(index);
