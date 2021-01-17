@@ -26,9 +26,12 @@ import TaskListIcons from "./TaskListIcons";
 // ------------------------------------------------------------------------ Styles ------------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-const useStyles: any = makeStyles(() => ({
+const useStyles: any = makeStyles((theme) => ({
   root: {
   },
+  icon: {
+    color: theme.palette.action.active,
+  }
 }));
 
 const iconSelectProps: any = {
@@ -145,7 +148,7 @@ const TaskListDialog: React.FC<Props> = (props) => {
           >
             {TaskListIcons.map((inIcon) => (
                 <MenuItem key={inIcon} value={inIcon}>
-                  <Icon color="primary">{inIcon}</Icon>
+                  <Icon className={classes.icon}>{inIcon}</Icon>
                 </MenuItem>
             ))}
           </TextField>
