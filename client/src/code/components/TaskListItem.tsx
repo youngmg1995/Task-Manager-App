@@ -26,6 +26,7 @@ import { ITask } from "../Tasks";
 
 const useStyles: any = makeStyles((theme) => ({
   root: {
+    position: "relative",
     padding: `${theme.spacing(.25)}px ${theme.spacing(2)}px`,
     display: "grid",
     alignItems: "center",
@@ -35,6 +36,7 @@ const useStyles: any = makeStyles((theme) => ({
     "&:hover": {
       cursor: "pointer",
       boxShadow: "inset 1px 0 0 #dadce0, inset -1px 0 0 #dadce0, 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.3)",
+      zIndex: 10,
     },
     [theme.breakpoints.down('xs')]: {
       gridTemplateColumns: "auto 1fr auto auto",
