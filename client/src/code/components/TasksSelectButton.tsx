@@ -121,7 +121,7 @@ const TasksSelectButton: React.FC<Props> = (props) => {
       <Tooltip 
         title="Select" 
         enterDelay={500} 
-        classes={{tooltip: classes.tooltip, tooltipPlacementBottom: classes.placementBottom}}
+        classes={{tooltip: classes.tooltip}}
       >
         <div ref={selectRef} className={classes.select}>
 
