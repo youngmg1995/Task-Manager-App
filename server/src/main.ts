@@ -251,6 +251,55 @@ app.delete("/tasks/:id",
   }
 );
 
+// edit specific field for all tasks given in list of task ids by replacing with new value
+app.put("/edit/tasks",
+  async (inRequest: Request, inResponse: Response) => {
+    console.log(`PUT /edit/tasks`, inRequest.body);
+    try {
+      const Worker: Tasks.Worker = new Tasks.Worker();
+      await Worker.editTasksField(inRequest.body.ids, inRequest.body.field, inRequest.body.value);
+      console.log(`PUT /edit/tasks : OK`);
+      inResponse.send("Tasks Updated");
+    } catch (inError) {
+      console.log(`PUT /edit/tasks`, inError);
+      inResponse.status(inError.status).send(inError.message);
+    }
+  }
+);
+
+// deletes all tasks specified in given list of task ids
+app.delete("/delete/tasks",
+  async (inRequest: Request, inResponse: Response) => {
+    console.log("DELETE /delete/tasks ", inRequest.body);
+    try {
+      const Worker: Tasks.Worker = new Tasks.Worker();
+      await Worker.deleteTasks(inRequest.body.ids);
+      console.log("DELETE /delete/tasks : OK");
+      inResponse.send("Tasks Deleted");
+    } catch (inError) {
+      console.log("DELETE /delete/tasks  : Error", inError);
+      inResponse.status(inError.status).send(inError.message);
+    }
+  }
+);
+
+
+// removes taskList field from all tasks in given list of task ids
+app.put("/remove-tasklist/tasks",
+  async (inRequest: Request, inResponse: Response) => {
+    console.log(`PUT /remove-tasklist/tasks`, inRequest.body);
+    try {
+      const Worker: Tasks.Worker = new Tasks.Worker();
+      await Worker.removeTaskList(inRequest.body.ids);
+      console.log(`PUT /remove-tasklist/tasks : OK`);
+      inResponse.send("Tasks Updated");
+    } catch (inError) {
+      console.log(`PUT /remove-tasklist/tasks`, inError);
+      inResponse.status(inError.status).send(inError.message);
+    }
+  }
+);
+
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------
 // ----------------------------------------------------------------- Helper Functions ---------------------------------------------------------------------

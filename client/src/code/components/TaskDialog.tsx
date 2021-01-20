@@ -122,8 +122,9 @@ const TaskDialog: React.FC<Props> = (props) => {
     setOpen(false);
   }
 
-  function handleSubmit(): void {
-    submitTask();
+  async function handleSubmit(): Promise<void> {
+    await submitTask();
+    setOpen(false);
   }
 
   const classes = useStyles();

@@ -84,6 +84,9 @@ export default class ToDoApp extends React.Component<Props, State> {
     // for editing a specific field of a task
     this.editTaskField = this.editTaskField.bind(this);
 
+    // for making changes to the selectedTasks
+    this.editSelectedTasks = this.editSelectedTasks.bind(this);
+
     // for deleting a task
     this.deleteTask = this.deleteTask.bind(this);
 
@@ -201,15 +204,13 @@ export default class ToDoApp extends React.Component<Props, State> {
     else {
       const newTask: ITask = await worker.createTask(this.state.dialogTask);
       const filteredTask: any = filterTask(newTask);
-      if (newTask.taskList === this.state.selectedTaskList) {
+      // add task to state.tasks if it should be in the selected task list
+      if (this.state.selectedTaskList === "all" || newTask.taskList === this.state.selectedTaskList) {
         this.setState(state => ({
           tasks: [filteredTask].concat(state.tasks),
         }));
       }
     }
-
-    // close task dialog
-    this.setShowTaskDialog(false);
 
   };
 
@@ -218,11 +219,12 @@ export default class ToDoApp extends React.Component<Props, State> {
     // if we are not initializing the App and the task list was not changed, then we don't need to grab any 
     // new tasks, so just set the currentView to "task-list-view" and selectedTask to null
     // if (!isInit && inTaskListID === this.state.selectedTaskList) {
-    // actually gonna make it update even if its the same task list
+    // actually gonna make it update even if its the same task list (probably should remove this conditional code below then)
     if (false) {
       this.setState({
         currentView: "task-list-view",
         selectedTask: null,
+        selectedTasks: new Set(),
       });
     // else we need to grab some new tasks
     } else {
@@ -251,12 +253,13 @@ export default class ToDoApp extends React.Component<Props, State> {
         tasks = await worker.getTaskListTasks(String(inTaskListID));
       }
   
-      // update state with new tasks, new task list, and set currentView to "task-list-view"
+      // update state with new tasks, new task list, no selectedTask(s), and set currentView to "task-list-view"
       this.setState({
         selectedTaskList: inTaskListID,
         tasks: tasks,
         currentView: "task-list-view",
         selectedTask: null,
+        selectedTasks: new Set(),
       });
 
     }
@@ -363,6 +366,91 @@ export default class ToDoApp extends React.Component<Props, State> {
     }
   }
 
+  async editSelectedTasks(inAction: string, inTaskListID?: number): Promise<void> {
+
+    // initialize worker for calling API
+    const worker: Tasks.Worker = new Tasks.Worker();
+
+    if (inAction === "delete") {
+
+      // update back-end tasks using API
+      await worker.deleteTasks(Array.from(this.state.selectedTasks));
+      // update front-end tasks and selectedTasks in state
+      this.setState(state => ({
+        tasks: state.tasks.filter( inTask => !state.selectedTasks.has(inTask._id) ),
+        selectedTasks: new Set(),
+      }));
+
+    } else if (inAction === "move to" ) {
+
+      // if taskListID specified then move selected tasks to specified taskList
+      if (inTaskListID) {
+        // update back-end tasks using API
+        await worker.editTasksField(Array.from(this.state.selectedTasks), "taskList", inTaskListID);
+      }
+      else {
+        await worker.removeTaskTaskList(Array.from(this.state.selectedTasks));
+      }
+      
+      // update front-end tasks and selectedTasks in state
+      // unless selected taskList is one of the defaults or the same as the given taskList (since then the tasks should still be showing)
+      if (!defaultTaskLists[this.state.selectedTaskList] && this.state.selectedTaskList !== inTaskListID) {
+        this.setState(state => ({
+          tasks: state.tasks.filter( inTask => !state.selectedTasks.has(inTask._id) ),
+          selectedTasks: new Set(),
+        }));
+      }
+
+    } else {
+
+      // initiate field and value
+      let field: string;
+      let value: boolean;
+      let check: boolean;
+
+      if (inAction === "mark not urgent") {
+        field = "urgent";
+        value = false; 
+        check = true;
+      } else if (inAction === "mark urgent") {
+        field = "urgent";
+        value = true; 
+        check = true;
+      } else if (inAction === "mark incomplete") {
+        field = "completed";
+        value = false; 
+        check = true;
+      } else if (inAction === "mark completed") {
+        field = "completed";
+        value = true; 
+        check = true;
+      } else {
+        field = "";
+        value = false; 
+        check = false;
+      }
+
+      if ( check ) {
+        // update back-end tasks using API
+        await worker.editTasksField(Array.from(this.state.selectedTasks), field, value);
+        // update front-end tasks and selectedTasks in state
+        this.setState(state => ({
+          tasks: state.tasks.map((inTask) => {
+            if (state.selectedTasks.has(inTask._id)) {
+              return Object.assign(
+                {}, 
+                inTask, 
+                { [field]: value },
+              );
+            } else return inTask;
+          }),
+        }));
+      }
+      
+    }
+
+  }
+
   setSelectedTask(inIndex: number | null): void {
     this.setState({
       currentView: "task-view",
@@ -433,6 +521,7 @@ export default class ToDoApp extends React.Component<Props, State> {
           currentView={this.state.currentView}
           deleteTask={this.deleteTask}
           editTaskField={this.editTaskField}
+          editSelectedTasks={this.editSelectedTasks}
         />
 
         <TaskDialog 

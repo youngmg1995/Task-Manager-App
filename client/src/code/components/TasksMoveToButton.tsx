@@ -84,6 +84,7 @@ const MoveToIcon: React.FC = () => {
 // props and state types
 type Props = {
   taskLists: ITaskList[],
+  editSelectedTasks: (inAction: string, inTaskListID?: number) => Promise<void>,
 };
 
 // actual component
@@ -91,6 +92,7 @@ const TasksMoveToButton: React.FC<Props> = (props) => {
   
   const {
     taskLists,
+    editSelectedTasks,
   } = props;
 
   const classes = useStyles();
@@ -105,8 +107,14 @@ const TasksMoveToButton: React.FC<Props> = (props) => {
     setAnchorEl(null);
   }
 
-  function handleMenuItemClick(): void {
-    handleMenuClose();    
+  async function handleMenuItemClick(event: any): Promise<void> {
+    const taskListID: number | undefined = event.currentTarget.dataset.value;
+    if (taskListID) {
+      await editSelectedTasks("move to", taskListID);
+    } else {
+      await editSelectedTasks("move to");
+    }
+    handleMenuClose();  
   }
 
   return (
@@ -147,14 +155,14 @@ const TasksMoveToButton: React.FC<Props> = (props) => {
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
       >
-        <MenuItem onClick={handleMenuItemClick} className={classes.menuItem}>
+        <MenuItem data-value={undefined} onClick={handleMenuItemClick} className={classes.menuItem}>
           <ListItemIcon classes={{root: classes.menuIcon}}>
             <Icon fontSize="small">label_off</Icon>
           </ListItemIcon>
           <ListItemText primary={<em>None</em>} />
         </MenuItem>
         {taskLists.map((inTaskList) => (
-          <MenuItem key={inTaskList._id} onClick={handleMenuItemClick} className={classes.menuItem}>
+          <MenuItem key={inTaskList._id} data-value={inTaskList._id} onClick={handleMenuItemClick} className={classes.menuItem}>
             <ListItemIcon classes={{root: classes.menuIcon}}>
               <Icon fontSize="small">{inTaskList.icon}</Icon>
             </ListItemIcon>

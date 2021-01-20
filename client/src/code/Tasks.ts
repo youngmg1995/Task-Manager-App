@@ -125,6 +125,44 @@ export class Worker {
     console.log("Client - DELETE /task/:id: response = ", response);
   }
 
+  // edit specific field for list of tasks using new value
+  public async editTasksField(inIDs: number[], inField: string, inValue: any): Promise<void> {
+    console.log(`Client - PUT /edit/tasks`, inIDs, inField, inValue);
+    const response: AxiosResponse = await axios.put(
+      `${this.serverAddress}/edit/tasks`,
+      {
+        ids: inIDs,
+        field: inField,
+        value: inValue,
+      },
+    );
+    console.log("Client - PUT /edit/tasks: response = ", response);
+  }
+
+  // delete each task in list of task ids
+  public async deleteTasks(inIDList: number[]): Promise<void> {
+    console.log("Client - DELETE /delete/tasks", inIDList);
+    const response: AxiosResponse = await axios.delete(
+      `${this.serverAddress}/delete/tasks`,
+      { 
+        data: { ids: inIDList },
+      },
+    );
+    console.log("Client - DELETE /delete/tasks: response = ", response);
+  }
+
+  // remove taskList field for each task in list of task ids
+  public async removeTaskTaskList(inIDList: number[]): Promise<void> {
+    console.log(`Client - PUT /remove-tasklist/tasks`, inIDList);
+    const response: AxiosResponse = await axios.put(
+      `${this.serverAddress}/remove-tasklist/tasks`,
+      {
+        ids: inIDList,
+      },
+    );
+    console.log("Client - PUT /remove-tasklist/tasks: response = ", response);
+  }
+
 };
 
 

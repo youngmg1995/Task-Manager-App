@@ -15,6 +15,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import WhatshotIcon from '@material-ui/icons/Whatshot';
+import WhatshotOutlinedIcon from '@material-ui/icons/WhatshotOutlined';
 
 // local imports
 import { ITask } from "../Tasks";
@@ -212,7 +213,7 @@ const TaskListItem: React.FC<Props> = (props) => {
           <Checkbox
             size="small"
             checked={task.urgent}
-            icon={<WhatshotIcon/>}
+            icon={<WhatshotOutlinedIcon/>}
             checkedIcon={<WhatshotIcon/>}
             onClick={handleUrgentClick}
             classes={{root: classes.checkbox}}

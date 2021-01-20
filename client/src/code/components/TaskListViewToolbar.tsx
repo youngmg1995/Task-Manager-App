@@ -12,6 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Tooltip, { TooltipProps } from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import WhatshotIcon from '@material-ui/icons/Whatshot';
+import WhatshotOutlinedIcon from '@material-ui/icons/WhatshotOutlined';
 import CancelIcon from '@material-ui/icons/Cancel';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
@@ -72,6 +73,7 @@ type Props = {
   allSelected: boolean,
   setSelectedTasks: (inAction: string, inTaskID?: number) => void,
   taskLists: ITaskList[],
+  editSelectedTasks: (inAction: string, inTaskListID?: number) => Promise<void>,
 };
 
 // actual component
@@ -82,9 +84,30 @@ const TaskListViewToolbar: React.FC<Props> = (props) => {
     allSelected,
     setSelectedTasks,
     taskLists,
+    editSelectedTasks,
   } = props;
 
   const classes = useStyles();
+
+  function handleDeleteClick(): void {
+    editSelectedTasks("delete");
+  }
+
+  function handleNotUrgentClick(): void {
+    editSelectedTasks("mark not urgent");
+  }
+
+  function handleUrgentClick(): void {
+    editSelectedTasks("mark urgent");
+  }
+
+  function handleIncompleteClick(): void {
+    editSelectedTasks("mark incomplete");
+  }
+
+  function handleCompletedClick(): void {
+    editSelectedTasks("mark completed");
+  }
 
   return (
 
@@ -112,10 +135,14 @@ const TaskListViewToolbar: React.FC<Props> = (props) => {
               checked={false}
               icon={<DeleteIcon/>}
               checkedIcon={<DeleteIcon/>}
+              onClick={handleDeleteClick}
             />
           </StyledTooltip>
           {/* Switch Task List */}
-          <TasksMoveToButton taskLists={taskLists}/>
+          <TasksMoveToButton 
+            taskLists={taskLists}
+            editSelectedTasks={editSelectedTasks}
+          />
 
           <div className={classes.divider}>
             <Divider orientation="vertical" light/>
@@ -126,8 +153,9 @@ const TaskListViewToolbar: React.FC<Props> = (props) => {
             <Checkbox
               size="small"
               checked={false}
-              icon={<WhatshotIcon/>}
-              checkedIcon={<WhatshotIcon/>}
+              icon={<WhatshotOutlinedIcon/>}
+              checkedIcon={<WhatshotOutlinedIcon/>}
+              onClick={handleNotUrgentClick}
             />
           </StyledTooltip>
           {/* Mark Urgent */}
@@ -135,8 +163,9 @@ const TaskListViewToolbar: React.FC<Props> = (props) => {
             <Checkbox
               size="small"
               checked={false}
-              icon={<WhatshotIcon color="secondary"/>}
-              checkedIcon={<WhatshotIcon color="secondary"/>}
+              icon={<WhatshotIcon/>}
+              checkedIcon={<WhatshotIcon/>}
+              onClick={handleUrgentClick}
             />
           </StyledTooltip>
 
@@ -151,6 +180,7 @@ const TaskListViewToolbar: React.FC<Props> = (props) => {
               checked={false}
               icon={<CancelIcon/>}
               checkedIcon={<CancelIcon/>}
+              onClick={handleIncompleteClick}
             />
           </StyledTooltip>
           {/* Mark Completed */}
@@ -160,6 +190,7 @@ const TaskListViewToolbar: React.FC<Props> = (props) => {
               checked={false}
               icon={<CheckCircleIcon/>}
               checkedIcon={<CheckCircleIcon/>}
+              onClick={handleCompletedClick}
             />
           </StyledTooltip>
 

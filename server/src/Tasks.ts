@@ -207,16 +207,81 @@ export class Worker {
         {},
         (inError: Error | null, inDocs: ITask[]) => {
           if (inError) {
-            console.log("Tasks.Worker.getTaskList(): Error", inError);
+            console.log("Tasks.Worker.queryTasks(): Error", inError);
             inReject({ status: 500, message: "Internal Server Error" });
           } else {
-            console.log("Tasks.Worker.getTaskList(): OK", inDocs);
+            console.log("Tasks.Worker.queryTasks(): OK", inDocs);
             inResolve(inDocs);
           }
         }
       );
     });
   }
+
+  // edit single field for list of tasks by prescribing the new value
+  public editTasksField(inIDList: string[], inField: string, inValue: any): Promise<void> {
+    return new Promise((inResolve, inReject) => {
+      this.db.update(
+        { _id: { $in: inIDList, } },
+        { $set: {[inField]: inValue}},
+        {multi : true},
+        (inError: Error | null, inNumEdited: number) => {
+          if (inError) {
+            console.log("Tasks.Worker.editTasksField(): Error", inError);
+            inReject({ status: 500, message: "Internal Server Error"});
+          } else if (inNumEdited !== inIDList.length) {
+            console.log("Tasks.Worker.editTasksField(): Error", "Tasks Not Found");
+            inReject({ status: 404, message: "Task Not Found"});
+          } else {
+            console.log("Tasks.Worker.editTasksField(): OK");
+            inResolve();
+          }
+        }
+      );
+    });
+  };
+
+  // delete task for each task specified in given list of task ids
+  public deleteTasks(inIDList: string[]): Promise<void> {
+    return new Promise((inResolve, inReject) => {
+      this.db.remove(
+        { _id: { $in: inIDList, } },
+        {multi : true},
+        (inError: Error | null, inNumRemoved: number) => {
+          if (inError) {
+            console.log("Tasks.Worker.deleteTasks(): Error", inError);
+            inReject({ status: 500, message: "Internal Server Error"});
+          } else {
+            console.log("Tasks.Worker.deleteTasks(): OK");
+            inResolve();
+          }
+        }
+      );
+    });
+  };
+
+  // remove tasklist field for each task specified in given list of task ids
+  public removeTaskList(inIDList: string[]): Promise<void> {
+    return new Promise((inResolve, inReject) => {
+      this.db.update(
+        { _id: { $in: inIDList, } },
+        { $unset: { taskList: true } },
+        {multi : true},
+        (inError: Error | null, inNumEdited: number) => {
+          if (inError) {
+            console.log("Tasks.Worker.removeTaskList(): Error", inError);
+            inReject({ status: 500, message: "Internal Server Error"});
+          } else if (inNumEdited !== inIDList.length) {
+            console.log("Tasks.Worker.removeTaskList(): Error", "Tasks Not Found");
+            inReject({ status: 404, message: "Task Not Found"});
+          } else {
+            console.log("Tasks.Worker.removeTaskList(): OK");
+            inResolve();
+          }
+        }
+      );
+    });
+  };
 
 };
 

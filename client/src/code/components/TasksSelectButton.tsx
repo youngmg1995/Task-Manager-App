@@ -43,6 +43,10 @@ const useStyles: any = makeStyles((theme) => ({
     marginTop: 4,
   },
   select: {
+    height: 40,
+    width: 50,
+    display: "flex",
+    flexDirection: "row",
   },
   selectButton: {
     width: 28,

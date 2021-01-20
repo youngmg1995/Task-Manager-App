@@ -74,7 +74,7 @@ const ToDoAppBar: React.FC<Props> = (props) => {
           </IconButton>
         </Hidden>
         <Typography variant="h6" className={classes.title}>
-          ToDo App
+          Task App
         </Typography>
         <Fab color="inherit" size="medium" aria-label="menu" onClick={handleComposeClick} className={classes.composeButton}>
           <AddIcon color="primary" fontSize="large"/>

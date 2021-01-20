@@ -92,8 +92,9 @@ type Props = {
   selectedTask: number | null,
   setSelectedTask: (inIndex: number | null) => void,
   currentView: string,
-  deleteTask: (inTaskID: number) => Promise<void>;
-  editTaskField: (inTaskID: number, inField: string, inValue: any) => Promise<void>;
+  deleteTask: (inTaskID: number) => Promise<void>,
+  editTaskField: (inTaskID: number, inField: string, inValue: any) => Promise<void>,
+  editSelectedTasks: (inAction: string, inTaskListID?: number) => Promise<void>,
 };
 
 // actual component
@@ -115,6 +116,7 @@ const BaseLayout: React.FC<Props> = (props) => {
     currentView,
     deleteTask,
     editTaskField,
+    editSelectedTasks,
   } = props;
 
   const classes = useStyles();
@@ -136,6 +138,7 @@ const BaseLayout: React.FC<Props> = (props) => {
         allSelected={tasks.length === selectedTasks.size}
         setSelectedTasks={setSelectedTasks}
         taskLists={taskLists}
+        editSelectedTasks={editSelectedTasks}
       />
     );
   }
